@@ -7,7 +7,8 @@ import hashlib
 import json
 import os
 import shutil
-import win32api, win32con
+try: import win32api, win32con
+except ImportError: pass
 
 from . import api, config, errors, post
 
