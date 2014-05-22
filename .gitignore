@@ -1,5 +1,9 @@
 Thumbs.db
 
-bak/
+# Ignore non-source directories
 __pycache__/
+build/
+dist/
+esix.egg-info/
+
 *.pyc
