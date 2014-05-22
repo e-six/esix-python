@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-E621 JSON API functions
+High level frontend for the e621 JSON API.
 """
 
-__version__ = "1.01"
+__version__ = "1.02"
 __author__ = "Alex Schaeffer"
 __copyright__ = "Copyright (c)2014, " + __author__
 
