@@ -1,3 +1,4 @@
+# Windows why do you do this
 Thumbs.db
 
 # Ignore non-source directories
@@ -6,4 +7,6 @@ build/
 dist/
 esix.egg-info/
 
+# Ignore Python binaries and other stuff
+install_files.txt
 *.pyc
