@@ -8,7 +8,7 @@ from . import api, config, errors, user
 
 class Takedown(object):
     def __init__(self, takedown_id=None, takedown_data=None):
-        """Create an instance of a takedown.
+        """Create an instance of a takedown request.
 
         :param takedown_id: The ID number of the tag to fetch online.
         :type takedown_id: int
