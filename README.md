@@ -6,7 +6,7 @@ An easy to use Python 3 frontend for e621.net's JSON API. Currently includes all
 ## Setup ##
 ### Dependencies ###
 * [Python 3](https://www.python.org/downloads/)
-* [pywin32](http://sourceforge.net/projects/pywin32/files/pywin32/) for Python 3.4+ is recommended to properly use the file downloading functionality. The script will run without it but metadata files may not be properly hidden.
+* [pywin32](http://sourceforge.net/projects/pywin32/files/pywin32/) for Python 3 is recommended to properly use the file downloading functionality. The script will run without it but metadata files may not be properly hidden.
 
 ### Installing ###
 Simply run `python setup.py install` from your download directory. The package should automatically install to your Python directory. From there you can `import esix` in any Python script.
