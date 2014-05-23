@@ -29,6 +29,7 @@ class ImgView:
     cur_img = 0
     
     def __init__(self, master, query=None):
+        # Initialize GUI environment
         self.master = master
         self.win_prop = self.win_width/float(self.win_height)
         self.master.geometry("%dx%d" % (self.win_width,self.win_height))
@@ -80,6 +81,7 @@ class ImgView:
         
 
     def set_status(self,text,color='black'):
+        # Set the text of the statusbar
         self.status_label.configure(text=text,fg=color)
 
     def on_search_click(self,event=None):
@@ -88,6 +90,7 @@ class ImgView:
         self.set_status('Searching...')
         self.master.update()
         query = self.url_entry.get()
+        # Run the query and get the list of results
         self.img_list = get_img_list(query,self.search_limit.get())
         self.set_status(str(len(self.img_list))+' images found.')
         self.search_button.configure(text='Search',state=NORMAL)
@@ -108,18 +111,22 @@ class ImgView:
     def load_image(self,url):
         print('Loading '+url)
         try:
+            # Try to load the image from the site
             req = urllib.request.Request(url,headers={
                 'User-Agent':USER_AGENT})
             img_data = urllib.request.urlopen(req).read()
             data_stream = io.BytesIO(img_data)
             image = Image.open(data_stream)
         except Exception as err:
+            # There was a problem, print error to the console
             print('Error: '+str(err),file=sys.stderr)
             return False
+        # Get proportions of image for resizing
         frame_width, frame_height = (
             self.image_frame.winfo_width(),self.image_frame.winfo_height())
         frame_prop = frame_width/float(frame_height)
         img_prop = image.size[0]/float(image.size[1])
+        # Scale image to fit window size
         if img_prop < frame_prop:
             img_h = int(frame_height)
             img_w = int(img_h*img_prop)
