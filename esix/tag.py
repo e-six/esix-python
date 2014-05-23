@@ -93,7 +93,7 @@ class Tag(object):
 
     @property
     def count(self):
-        """Returns the number of occurences of this tag."""
+        """Returns the number of occurrences of this tag."""
         return self._data['count']
 
     @property

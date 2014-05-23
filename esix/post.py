@@ -23,7 +23,7 @@ def search(query,limit=75):
 
     :param query: The tag search query.
     :type query: str
-    :param limit: Number of posts to fetch per page. Default 75.
+    :param limit: Number of posts to fetch. Default 75.
     :type limit: int
     :returns: A generator of images matching the query.
     :rtype: generator object
@@ -83,7 +83,7 @@ def popular_by_week(year=None,month=None,day=None):
         yield Post(post_data=post_data)
 
 def popular_by_month(year=None,month=None):
-    """Get a list of popular posts for a single week.
+    """Get a list of popular posts for a single month.
 
     :param year: Optional, the year to search.
     :type year: int
