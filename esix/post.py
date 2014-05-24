@@ -18,7 +18,7 @@ def recent_posts(limit=75):
     for post_data in api._get_data_obj(api._get_page(url)):
         yield Post(post_data=post_data)
 
-def search(query,limit=75):
+def search(query, limit=75):
     """Run a search and return a list of the resulting images.
 
     :param query: The tag search query.
@@ -46,7 +46,7 @@ def search(query,limit=75):
             break
         page += 1
 
-def popular_by_day(year=None,month=None,day=None):
+def popular_by_day(year=None, month=None, day=None):
     """Get a list of popular posts for a single day.
 
     :param year: Optional, the year to search.
@@ -64,7 +64,7 @@ def popular_by_day(year=None,month=None,day=None):
     for post_data in api._get_data_obj(api._get_page(url)):
         yield Post(post_data=post_data)
 
-def popular_by_week(year=None,month=None,day=None):
+def popular_by_week(year=None, month=None, day=None):
     """Get a list of popular posts for a single week.
 
     :param year: Optional, the year to search.
@@ -82,7 +82,7 @@ def popular_by_week(year=None,month=None,day=None):
     for post_data in api._get_data_obj(api._get_page(url)):
         yield Post(post_data=post_data)
 
-def popular_by_month(year=None,month=None):
+def popular_by_month(year=None, month=None):
     """Get a list of popular posts for a single month.
 
     :param year: Optional, the year to search.

@@ -26,7 +26,7 @@ def get_file_md5(filename):
     f.close()
     return md5
 
-def file_exists(folder,name):
+def file_exists(folder, name):
     """Returns whether or not a file exists in a given folder.
 
     :param folder: The local folder to search.
@@ -38,7 +38,7 @@ def file_exists(folder,name):
     """
     return os.path.isfile(folder+name)
 
-def file_md5_exists(folder,md5):
+def file_md5_exists(folder, md5):
     """Returns whether or not a file with a given md5 checksum is in a folder.
 
     :param folder: The local folder to search.
@@ -55,7 +55,7 @@ def file_md5_exists(folder,md5):
         except PermissionError: pass
     return False
 
-def get_post_data(folder,filename):
+def get_post_data(folder, filename):
     """Fetch locally stored post metadata from a file.
 
     :param folder: The folder the image is stored in.
@@ -72,7 +72,7 @@ def get_post_data(folder,filename):
     except Exception as err: data = None
     return post.Post(post_data=data)
 
-def store_post_data(post_obj,folder):
+def store_post_data(post_obj, folder):
     """Save a post's information locally.
 
     :param post_obj: The post object.
@@ -96,7 +96,7 @@ def store_post_data(post_obj,folder):
         return True
     except: return False
 
-def search_local_tags(folder,query):
+def search_local_tags(folder, query):
     """Search a local folder's existing metadata for specified tags.
 
     :param folder: The folder to search.
@@ -120,8 +120,8 @@ def search_local_tags(folder,query):
             matches.append(f+'.'+img_data['file_ext'])
     return matches
 
-def download_image(post_obj,dest='./',name_format="{md5}.{file_ext}",
-                   overwrite=False,write_metadata=False):
+def download_image(post_obj, dest='./', name_format="{md5}.{file_ext}",
+                   overwrite=False, write_metadata=False):
     """Downloads a given post object as an image.
 
     :param post_obj: The post to download.

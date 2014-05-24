@@ -41,7 +41,7 @@ def _get_page(url):
     if page is None: raise errors.APIGetError('Unable to open URL: '+str(url))
     return page
 
-def _post_data(data,url):
+def _post_data(data, url):
     """Post the given data object to the given URL.
 
     :param data: A dict or tuple of tuples with the data to post.

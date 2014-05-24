@@ -6,7 +6,7 @@ Comment class for the e621 API.
 from . import api, config, errors
 
 
-def login(username,password):
+def login(username, password):
     """Attemt to login to the site, store credentials if successful.
 
     :param username: Your username.

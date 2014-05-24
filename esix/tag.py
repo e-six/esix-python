@@ -5,7 +5,7 @@ Tag class for the e621 API.
 
 from . import api, config, errors
 
-def all_tags(page=1,limit=2):
+def all_tags(page=1, limit=2):
     """Return a generator of all site tags.
 
     :param page: The page to begin on, assuming 50 tags per page.

@@ -5,7 +5,7 @@ Pool class for the e621 API.
 
 from . import api, config, errors, post
 
-def search(title='',limit=5):
+def search(title='', limit=5):
     """Search the site's image pools by name.
 
     :param title: The whole or partial pool name. Omit for all pools.
