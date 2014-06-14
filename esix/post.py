@@ -94,7 +94,7 @@ def popular_by_month(year=None, month=None):
     """
     url = config.BASE_URL + 'post/popular_by_month.json'
     if month and year:
-        url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
+        url += '?month='+str(month)+'&year='+str(year)
     for post_data in api._get_data_obj(api._get_page(url)):
         yield Post(post_data=post_data)
 
