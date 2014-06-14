@@ -99,14 +99,14 @@ else:
 print('Fetching info for tag "blotch"')
 tag = esix.tag.Tag('blotch')
 print('Tag ID: ' + str(tag.id))
-print('Type: ' + tag.type)
+print('Type: ' + tag.type_str)
 print('Posts with this tag: ' + str(tag.count))
 print()
 
 # ...As well as a list of related tags
 print('Tags related to "blotch":')
 for t in tag.related:
-    print(t.name + ' (' + t.type + ')')
+    print(t.name + ' (' + t.type_str + ')')
 print()
 
 # Finally, we can fetch information about image pools on the site
