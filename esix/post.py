@@ -129,141 +129,225 @@ class Post(object):
     def id(self):
         """Returns the ID number of the post."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
 
     @property
     def author(self):
         """Returns the username of the uploader."""
         return self._data['author']
+    @author.setter
+    def author(self, value):
+        self._data['author'] = value
 
     @property
     def creator_id(self):
         """Returns the user ID of the uploader."""
         return self._data['creator_id']
+    @creator_id.setter
+    def creator_id(self, value):
+        self._data['creator_id'] = value
 
     @property
     def created_at(self):
         """Returns when the post was uploaded."""
         return self._data['created_at']
+    @created_at.setter
+    def created_at(self, value):
+        self._data['created_at'] = value
 
     @property
     def status(self):
         """Returns the status of the post: active, flagged, pending, delted."""
         return self._data['status']
+    @status.setter
+    def status(self, value):
+        self._data['status'] = value
 
     @property
     def source(self):
         """Returns the post's first source."""
         return self._data['source']
+    @source.setter
+    def source(self, value):
+        self._data['source'] = value
 
     @property
     def sources(self):
         """Returns an array of the post's sources."""
         return self._data['sources']
+    @sources.setter
+    def sources(self, value):
+        self._data['sources'] = value
 
     @property
     def tags(self):
         """Returns an array of the post's tags."""
         return self._data['tags'].split()
+    @tags.setter
+    def tags(self, value):
+        self._data['tags'] = value
 
     @property
     def description(self):
         """Returns the post's description."""
         return self._data['description']
+    @description.setter
+    def description(self, value):
+        self._data['description'] = value
 
     @property
     def score(self):
         """Returns the post's score."""
         return self._data['score']
+    @score.setter
+    def score(self, value):
+        self._data['score'] = value
 
     @property
     def rating(self):
         """Returns the post's rating: e, q, s."""
         return self._data['rating']
+    @rating.setter
+    def rating(self, value):
+        self._data['rating'] = value
 
     @property
     def parent_id(self):
         """Returns the post's parent post ID."""
         return self._data['parent_id']
+    @parent_id.setter
+    def parent_id(self, value):
+        self._data['parent_id'] = value
 
     @property
     def has_children(self):
         """Returns whether or not the post has children."""
         return self._data['has_children']
+    @has_children.setter
+    def has_children(self, value):
+        self._data['has_children'] = value
 
     @property
     def children(self):
         """Returns an array of the post's children."""
         return self._data['children'].split(',')
+    @children.setter
+    def children(self, value):
+        self._data['children'] = value
 
     @property
     def has_notes(self):
         """Returns whether or not the post has any notes."""
         return self._data['has_notes']
+    @has_notes.setter
+    def has_notes(self, value):
+        self._data['has_notes'] = value
 
     @property
     def has_comments(self):
         """Returns whether or not the post has any comments."""
         return self._data['has_comments']
+    @has_comments.setter
+    def has_comments(self, value):
+        self._data['has_comments'] = value
 
     @property
     def md5(self):
         """Returns the post's md5 checksum."""
         return self._data['md5']
+    @md5.setter
+    def md5(self, value):
+        self._data['md5'] = value
 
     @property
     def file_url(self):
         """Returns the URL of the image file."""
         return self._data['file_url']
+    @file_url.setter
+    def file_url(self, value):
+        self._data['file_url'] = value
 
     @property
     def file_ext(self):
         """Returns the file's extension: jpb, png, gif, swf."""
         return self._data['file_ext']
+    @file_ext.setter
+    def file_ext(self, value):
+        self._data['file_ext'] = value
 
     @property
     def file_size(self):
         """Returns the size in byetes of the file."""
         return self._data['file_size']
+    @file_size.setter
+    def file_size(self, value):
+        self._data['file_size'] = value
 
     @property
     def width(self):
         """Returns the width of the image."""
         return self._data['width']
+    @width.setter
+    def width(self, value):
+        self._data['width'] = value
 
     @property
     def height(self):
         """Returns the height of the image."""
         return self._data['height']
+    @height.setter
+    def height(self, value):
+        self._data['height'] = value
 
     @property
     def sample_url(self):
         """Returns the URL of the scaled sample image."""
         return self._data['sample_url']
+    @sample_url.setter
+    def sample_url(self, value):
+        self._data['sample_url'] = value
 
     @property
     def sample_width(self):
         """Returns the width of the sample image."""
         return self._data['sample_width']
+    @sample_width.setter
+    def sample_width(self, value):
+        self._data['sample_width'] = value
 
     @property
     def sample_height(self):
         """Returns the height of the sample image."""
         return self._data['sample_height']
+    @sample_height.setter
+    def sample_height(self, value):
+        self._data['sample_height'] = value
 
     @property
     def preview_url(self):
         """Returns the URL of the preview thumbnail."""
         return self._data['preview_url']
+    @preview_url.setter
+    def preview_url(self, value):
+        self._data['preview_url'] = value
 
     @property
     def preview_width(self):
         """Returns the width of the preview thumbnail."""
         return self._data['preview_width']
+    @preview_width.setter
+    def preview_width(self, value):
+        self._data['preview_width'] = value
 
     @property
     def preview_height(self):
         """Returns the height of the preview thumbnail."""
         return self._data['preview_height']
+    @preview_height.setter
+    def preview_height(self, value):
+        self._data['preview_height'] = value
 
     @property
     def favorited_users(self):
@@ -296,7 +380,7 @@ class Post(object):
             api._get_data_obj(api._get_page(url)))):
             yield comment.Comment(comment_data=comment_data)
 
-    def vote_post(self,vote):
+    def vote_post(self, vote):
         """Upvote or downvote the post.
 
         :param vote: 1 for an upvote, -1 for a downvote.

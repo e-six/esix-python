@@ -48,36 +48,57 @@ class Comment(object):
     def id(self):
         """Returns the comment ID."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
 
     @property
     def creator_id(self):
         """Returns the user ID of the comment author."""
         return self._data['creator_id']
+    @creator_id.setter
+    def creator_id(self, value):
+        self._data['creator_id'] = value
 
     @property
     def creator(self):
         """Returns the username of the comment author."""
         return self._data['creator']
+    @creator.setter
+    def creator(self, value):
+        self._data['creator'] = value
 
     @property
     def post_id(self):
         """Returns the ID of the post the comment was made on."""
         return self._data['post_id']
+    @post_id.setter
+    def post_id(self, value):
+        self._data['post_id'] = value
 
     @property
     def created_at(self):
         """Returns a formatted string of the comment's post time."""
         return self._data['created_at']
+    @created_at.setter
+    def created_at(self, value):
+        self._data['created_at'] = value
 
     @property
     def body(self):
         """Returns the comment body as entered by the author."""
         return self._data['body']
+    @body.setter
+    def body(self, value):
+        self._data['body'] = value
 
     @property
     def score(self):
         """Returns the comment's score."""
         return self._data['score']
+    @score.setter
+    def score(self, value):
+        self._data['score'] = value
 
     def submit(self):
         """Posts this comment to the site. Must be logged in.
