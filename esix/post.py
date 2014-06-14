@@ -120,9 +120,13 @@ class Post(object):
             self._data[prop] = None
         if post_id is None and post_data is None: return
         if post_id is not None:
-            post_data = api._get_data_obj(api._get_page(
-                config.BASE_URL + '/post/show.json?id=' + str(post_id)
-            ))
+            try:
+                post_data = api._get_data_obj(api._get_page(
+                    config.BASE_URL + '/post/show.json?id=' + str(post_id)
+                ))
+            except errors.APIGetError:
+                raise errors.PostNotFoundError('The requested post could ' +\
+                    'not be found.')
         for prop in post_data: self._data[prop] = post_data[prop]
 
     @property
