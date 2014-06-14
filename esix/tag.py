@@ -50,7 +50,8 @@ class Tag(object):
             url = config.BASE_URL + 'tag/index.json?'+id_type+'='+str(tag_id)
             tag_list = api._get_data_obj(api._get_page(url))
             if len(tag_list) == 0:
-                raise errors.TagNotFoundError('Tag could not be found.')
+                raise errors.TagNotFoundError('The requested tag ' +\
+                    'could not be found.')
             else: tag_data = tag_list[0]
         for prop in tag_data: self._data[prop] = tag_data[prop]
 
