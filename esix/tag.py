@@ -58,19 +58,38 @@ class Tag(object):
     def id(self):
         """Returns the ID number of the tag."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
 
     @property
     def name(self):
         """Returns the name of the tag."""
         return self._data['name']
+    @name.setter
+    def name(self, value):
+        self._data['name'] = value
 
     @property
     def ambiguous(self):
         """Returns whether or not the tag is set as ambiguous."""
         return self._data['ambiguous']
+    @ambiguous.setter
+    def ambiguous(self, value):
+        self._data['ambiguous'] = value
 
     @property
     def type(self):
+        """Returns the integer type of the tag: 0(general), 1(artist),
+        3(copyright), 4(character), 5(species)
+        """
+        return self._data['type']
+    @type.setter
+    def type(self, value):
+        self._data['type'] = value
+
+    @property
+    def type_str(self):
         """Returns the tag type: general, artist, copyright,
         character, species
         """
@@ -85,20 +104,18 @@ class Tag(object):
         except: return None
 
     @property
-    def type_int(self):
-        """Returns the integer type of the tag: 0(general), 1(artist),
-        3(copyright), 4(character), 5(species)
-        """
-        return self._data['type']
-
-    @property
     def count(self):
         """Returns the number of occurrences of this tag."""
         return self._data['count']
+    @count.setter
+    def count(self, value):
+        self._data['count'] = value
 
     @property
     def related(self):
         """Returns a generator of related tags."""
         url = config.BASE_URL + 'tag/related.json?tags=' + str(self.name)
-        for name,cnt,typ in api._get_data_obj(api._get_page(url))[self.name]:
+        related = api._get_data_obj(api._get_page(url))[self.name]
+        next(related)
+        for name,cnt,typ in related:
             yield Tag(name)

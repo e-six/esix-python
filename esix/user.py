@@ -78,31 +78,49 @@ class User(object):
     def id(self):
         """Returns the user's ID number."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
 
     @property
     def name(self):
         """Returns the user's username."""
         return self._data['name']
+    @name.setter
+    def name(self, value):
+        self._data['name'] = value
 
     @property
     def level(self):
         """Returns the user's site level."""
         return self._data['level']
+    @level.setter
+    def level(self, value):
+        self._data['level'] = value
 
     @property
     def created_at(self):
         """Returns a formatted string of the user's join date."""
         return self._data['created_at']
+    @created_at.setter
+    def created_at(self, value):
+        self._data['created_at'] = value
 
     @property
     def blacklisted(self):
         """Returns a list of tag groups the user has blacklisted."""
         return self._data['blacklisted']
+    @blacklisted.setter
+    def blacklisted(self, value):
+        self._data['blacklisted'] = value
 
     @property
     def subscriptions(self):
         """Returns a dict of tag subscriptions by the user."""
         return self._data['subscriptions']
+    @subscriptions.setter
+    def subscriptions(self, value):
+        self._data['subscriptions'] = value
 
     @property
     def tag_history(self):
