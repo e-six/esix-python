@@ -66,6 +66,24 @@ class BadPostError(PostError):
     """
     pass
 
+class PoolError(APIException):
+    """
+    Error trying to retrieve pool information.
+    """
+    pass
+
+class PoolNotFoundError(PoolError):
+    """
+    The requested pool could not be found.
+    """
+    pass
+
+class BadPoolError(PoolError):
+    """
+    A pool object is not structured correctly, or data is missing.
+    """
+    pass
+
 class CommentError(APIException):
     """
     Error trying to retrieve comment information.
