@@ -12,3 +12,4 @@ install_files.txt
 *.pyc
 *.sublime-project
 *.sublime-workspace
+/test.py
