@@ -13,3 +13,4 @@ install_files.txt
 *.sublime-project
 *.sublime-workspace
 /test.py
+/install.sh
