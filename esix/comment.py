@@ -6,7 +6,7 @@ Comment class for the e621 API.
 from . import api, config, errors
 
 
-def recent_comments():
+def recent():
     """Get a list of the 25 most recent comments made site-wide.
 
     :returns: A generator of comment objects for the most recent comments.

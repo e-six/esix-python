@@ -75,7 +75,7 @@ print()
 
 # We can also get a list of the most recent comments made site-wide
 print('25 most recent comments on the site:')
-for c in esix.comment.recent_comments():
+for c in esix.comment.recent():
     print('#' + str(c.id) + ' by ' + c.creator)
 print()
 
