@@ -10,3 +10,6 @@ esix.egg-info/
 # Ignore Python binaries and other stuff
 install_files.txt
 *.pyc
+*.sublime-project
+*.sublime-workspace
+/test.py

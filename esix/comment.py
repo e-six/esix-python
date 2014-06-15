@@ -6,7 +6,7 @@ Comment class for the e621 API.
 from . import api, config, errors
 
 
-def recent_comments():
+def recent():
     """Get a list of the 25 most recent comments made site-wide.
 
     :returns: A generator of comment objects for the most recent comments.
@@ -35,49 +35,74 @@ class Comment(object):
             if not config.USERNAME and not config.PASSWORD:
                 raise errors.APIUnauthorizedError('You must be logged in to ' +\
                                                   'find a comment by ID.')
-            comment_data = api._get_data_obj(api._post_data(
-                {
-                    'id':str(comment_id),
-                    'login':str(config.USERNAME),
-                    'password_hash':str(config.PASSWORD)
-                },
-                config.BASE_URL + 'comment/show.json')) or self._data
+            try:
+                comment_data = api._get_data_obj(api._post_data(
+                    {
+                        'id':str(comment_id),
+                        'login':str(config.USERNAME),
+                        'password_hash':str(config.PASSWORD)
+                    },
+                    config.BASE_URL + 'comment/show.json'))
+            except:
+                raise errors.CommentNotFoundError('The requested comment ' +\
+                    'could not be found.')
         for prop in comment_data: self._data[prop] = comment_data[prop]
 
     @property
     def id(self):
         """Returns the comment ID."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
 
     @property
     def creator_id(self):
         """Returns the user ID of the comment author."""
         return self._data['creator_id']
+    @creator_id.setter
+    def creator_id(self, value):
+        self._data['creator_id'] = value
 
     @property
     def creator(self):
         """Returns the username of the comment author."""
         return self._data['creator']
+    @creator.setter
+    def creator(self, value):
+        self._data['creator'] = value
 
     @property
     def post_id(self):
         """Returns the ID of the post the comment was made on."""
         return self._data['post_id']
+    @post_id.setter
+    def post_id(self, value):
+        self._data['post_id'] = value
 
     @property
     def created_at(self):
         """Returns a formatted string of the comment's post time."""
         return self._data['created_at']
+    @created_at.setter
+    def created_at(self, value):
+        self._data['created_at'] = value
 
     @property
     def body(self):
         """Returns the comment body as entered by the author."""
         return self._data['body']
+    @body.setter
+    def body(self, value):
+        self._data['body'] = value
 
     @property
     def score(self):
         """Returns the comment's score."""
         return self._data['score']
+    @score.setter
+    def score(self, value):
+        self._data['score'] = value
 
     def submit(self):
         """Posts this comment to the site. Must be logged in.

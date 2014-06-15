@@ -59,7 +59,10 @@ class Pool(object):
         if pool_id is None and pool_data is None: return
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
-            pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
+            try: pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
+            except errors.APIGetError:
+                raise errors.PoolNotFoundError('The requested pool could ' +\
+                    'not be found.')
             if 'posts' in pool_data: del(pool_data['posts'])
         for prop in pool_data: self._data[prop] = pool_data[prop]
 
@@ -67,11 +70,18 @@ class Pool(object):
     def id(self):
         """Returns the pool's ID."""
         return self._data['id']
+    @id.setter
+    def id(self, value):
+        self._data['id'] = value
+    
 
     @property
     def name(self):
         """Returns the pool's name."""
         return self._data['name']
+    @name.setter
+    def name(self, value):
+        self._data['name'] = value
 
     @property
     def name_normal(self):
@@ -82,45 +92,67 @@ class Pool(object):
     def user_id(self):
         """Returns the ID of the user who created the pool."""
         return self._data['user_id']
+    @user_id.setter
+    def user_id(self, value):
+        self._data['user_id'] = value
 
     @property
     def created_at(self):
         """Returns a dict of information on the pool's creation time."""
         return self._data['created_at']
+    @created_at.setter
+    def created_at(self, value):
+        self._data['created_at'] = value
 
     @property
     def updated_at(self):
         """Returns a dict of information on the pool's last update."""
         return self._data['updated_at']
+    @updated_at.setter
+    def updated_at(self, value):
+        self._data['updated_at'] = value
 
     @property
     def post_count(self):
         """Returns the number of posts in the pool."""
         return self._data['post_count']
+    @post_count.setter
+    def post_count(self, value):
+        self._data['post_count'] = value
 
     @property
     def is_public(self):
         """Returns whether or not the pool is marked public."""
         return self._data['is_public']
+    @is_public.setter
+    def is_public(self, value):
+        self._data['is_public'] = value
 
     @property
     def is_active(self):
         """Returns whether or not the pool is active."""
         return self._data['is_active']
+    @is_active.setter
+    def is_active(self, value):
+        self._data['is_active'] = value
 
     @property
     def description(self):
         """Returns the pool's description."""
         return self._data['description']
+    @description.setter
+    def description(self, value):
+        self._data['description'] = value
 
     @property
     def posts(self):
         """Returns a generator of Post objects for the pool."""
-        url = url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
+        url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
         page = 1
         end = False
         while not end:
-            rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+            try: rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+            except errors.APIGetError: return None
             for post_data in rs['posts']:
                 yield post.Post(post_data=post_data)
             if rs is None or len(rs['posts']) == 0:
