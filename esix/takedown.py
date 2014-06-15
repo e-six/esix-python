@@ -23,9 +23,14 @@ class Takedown(object):
             self._data[prop] = None
         if takedown_id is None and takedown_data is None: return
         if takedown_id is not None:
-            takedown_data = api._get_data_obj(api._get_page(
-                config.BASE_URL + '/takedown/show.json?id=' + str(takedown_id)
-            ))
+            try:
+                takedown_data = api._get_data_obj(api._get_page(
+                    config.BASE_URL + '/takedown/show.json?id=' + \
+                    str(takedown_id)
+                ))
+            except errors.JSONError:
+                raise errors.TakedownNotFoundError('The requested takedown ' +\
+                    'could not be found.')
         for prop in takedown_data: self._data[prop] = takedown_data[prop]
 
     @property

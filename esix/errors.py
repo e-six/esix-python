@@ -138,6 +138,24 @@ class BadTagError(TagError):
     """
     pass
 
+class TakedownError(APIException):
+    """
+    Error trying to retrieve takedown information.
+    """
+    pass
+
+class TakedownNotFoundError(TakedownError):
+    """
+    The requested takedown could not be found.
+    """
+    pass
+
+class BadTakedownError(TakedownError):
+    """
+    A takedown object is not structured correctly, or data is missing.
+    """
+    pass
+
 class FileError(APIException):
     """
     An error occured during the handling of local files.
