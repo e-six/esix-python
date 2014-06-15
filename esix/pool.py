@@ -59,7 +59,10 @@ class Pool(object):
         if pool_id is None and pool_data is None: return
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
-            pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
+            try: pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
+            except errors.APIGetError:
+                raise errors.PoolNotFoundError('The requested pool could ' +\
+                    'not be found.')
             if 'posts' in pool_data: del(pool_data['posts'])
         for prop in pool_data: self._data[prop] = pool_data[prop]
 
@@ -144,11 +147,12 @@ class Pool(object):
     @property
     def posts(self):
         """Returns a generator of Post objects for the pool."""
-        url = url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
+        url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
         page = 1
         end = False
         while not end:
-            rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+            try: rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+            except errors.APIGetError: return None
             for post_data in rs['posts']:
                 yield post.Post(post_data=post_data)
             if rs is None or len(rs['posts']) == 0:

@@ -6,7 +6,7 @@ Comment class for the e621 API.
 from . import api, config, errors
 
 
-def recent_comments():
+def recent():
     """Get a list of the 25 most recent comments made site-wide.
 
     :returns: A generator of comment objects for the most recent comments.
@@ -35,13 +35,17 @@ class Comment(object):
             if not config.USERNAME and not config.PASSWORD:
                 raise errors.APIUnauthorizedError('You must be logged in to ' +\
                                                   'find a comment by ID.')
-            comment_data = api._get_data_obj(api._post_data(
-                {
-                    'id':str(comment_id),
-                    'login':str(config.USERNAME),
-                    'password_hash':str(config.PASSWORD)
-                },
-                config.BASE_URL + 'comment/show.json')) or self._data
+            try:
+                comment_data = api._get_data_obj(api._post_data(
+                    {
+                        'id':str(comment_id),
+                        'login':str(config.USERNAME),
+                        'password_hash':str(config.PASSWORD)
+                    },
+                    config.BASE_URL + 'comment/show.json'))
+            except:
+                raise errors.CommentNotFoundError('The requested comment ' +\
+                    'could not be found.')
         for prop in comment_data: self._data[prop] = comment_data[prop]
 
     @property

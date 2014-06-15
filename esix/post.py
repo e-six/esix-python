@@ -94,7 +94,7 @@ def popular_by_month(year=None, month=None):
     """
     url = config.BASE_URL + 'post/popular_by_month.json'
     if month and year:
-        url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
+        url += '?month='+str(month)+'&year='+str(year)
     for post_data in api._get_data_obj(api._get_page(url)):
         yield Post(post_data=post_data)
 
@@ -120,9 +120,13 @@ class Post(object):
             self._data[prop] = None
         if post_id is None and post_data is None: return
         if post_id is not None:
-            post_data = api._get_data_obj(api._get_page(
-                config.BASE_URL + '/post/show.json?id=' + str(post_id)
-            ))
+            try:
+                post_data = api._get_data_obj(api._get_page(
+                    config.BASE_URL + '/post/show.json?id=' + str(post_id)
+                ))
+            except errors.APIGetError:
+                raise errors.PostNotFoundError('The requested post could ' +\
+                    'not be found.')
         for prop in post_data: self._data[prop] = post_data[prop]
 
     @property
@@ -183,8 +187,8 @@ class Post(object):
 
     @property
     def tags(self):
-        """Returns an array of the post's tags."""
-        return self._data['tags'].split()
+        """Returns a space-separated string of the post's tags."""
+        return self._data['tags']
     @tags.setter
     def tags(self, value):
         self._data['tags'] = value
@@ -231,8 +235,8 @@ class Post(object):
 
     @property
     def children(self):
-        """Returns an array of the post's children."""
-        return self._data['children'].split(',')
+        """Returns a comma-separated string of the post's children."""
+        return self._data['children']
     @children.setter
     def children(self, value):
         self._data['children'] = value
@@ -353,8 +357,9 @@ class Post(object):
     def favorited_users(self):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
-        for username in api._get_data_obj(api._get_page(url))\
-            ['favorited_users'].split(','):
+        try: data = api._get_data_obj(api._get_page(url))
+        except errors.APIGetError: return None
+        for username in data['favorited_users'].split(','):
             yield user.User(username)
 
     @property
@@ -362,7 +367,9 @@ class Post(object):
         """Returns a generator of tag changes for this post."""
         url = config.BASE_URL + 'post_tag_history/index.json?post_id=' +\
               str(self.id)
-        for tag_change in api._get_data_obj(api._get_page(url)):
+        try: data = api._get_data_obj(api._get_page(url))
+        except errors.APIGetError: return None
+        for tag_change in data:
             yield tag_change
 
     @property
@@ -370,14 +377,17 @@ class Post(object):
         """Returns a generator of flags for this post."""
         url = config.BASE_URL + 'post_flag_history/index.json?post_id=' +\
               str(self.id)
-        for flag in api._get_data_obj(api._get_page(url)): yield flag
+        try: data = api._get_data_obj(api._get_page(url))
+        except errors.APIGetError: return None
+        for flag in data: yield flag
 
     @property
     def comments(self):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
-        for comment_data in list(reversed(
-            api._get_data_obj(api._get_page(url)))):
+        try: data = api._get_data_obj(api._get_page(url))
+        except errors.APIGetError: return None
+        for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)
 
     def vote_post(self, vote):

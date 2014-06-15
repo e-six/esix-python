@@ -50,7 +50,8 @@ class Tag(object):
             url = config.BASE_URL + 'tag/index.json?'+id_type+'='+str(tag_id)
             tag_list = api._get_data_obj(api._get_page(url))
             if len(tag_list) == 0:
-                raise errors.TagNotFoundError('Tag could not be found.')
+                raise errors.TagNotFoundError('The requested tag ' +\
+                    'could not be found.')
             else: tag_data = tag_list[0]
         for prop in tag_data: self._data[prop] = tag_data[prop]
 
@@ -115,7 +116,5 @@ class Tag(object):
     def related(self):
         """Returns a generator of related tags."""
         url = config.BASE_URL + 'tag/related.json?tags=' + str(self.name)
-        related = api._get_data_obj(api._get_page(url))[self.name]
-        next(related)
-        for name,cnt,typ in related:
-            yield Tag(name)
+        for tag in api._get_data_obj(api._get_page(url))[self.name][1::]:
+            yield Tag(tag[0])

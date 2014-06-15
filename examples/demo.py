@@ -46,7 +46,7 @@ print('Fetching post with ID 476264')
 post = esix.post.Post(476264)
 print('Uploader: ' + post.author)
 print('Source: ' + post.source)
-print('First five tags: ' + ', '.join(post.tags[:5]))
+print('First five tags: ' + ', '.join(post.tags.split()[:5]))
 print('Score: ' + str(post.score))
 print('File URL: ' + post.file_url)
 print()
@@ -75,7 +75,7 @@ print()
 
 # We can also get a list of the most recent comments made site-wide
 print('25 most recent comments on the site:')
-for c in esix.comment.recent_comments():
+for c in esix.comment.recent():
     print('#' + str(c.id) + ' by ' + c.creator)
 print()
 
