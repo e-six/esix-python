@@ -390,7 +390,7 @@ class Post(object):
         for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)
 
-    def vote_post(self, vote):
+    def vote(self, vote):
         """Upvote or downvote the post.
 
         :param vote: 1 for an upvote, -1 for a downvote.
