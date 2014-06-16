@@ -24,11 +24,12 @@ class Post(object):
         :type post_data: dict
         """
         self._data = {}
-        for prop in []:
+        for prop in ['id',  'creator',  'creator_id',
+                     'parent_id',  'title',    'body']:
             self._data[prop] = None
         if post_id is None and post_data is None: return
         if post_id is not None:
-            url = config.BASE_URL + 'forum/index.json?id='+str(post_id)
+            url = config.BASE_URL + 'forum/show.json?id='+str(post_id)
             try: post_data = api._get_data_obj(api._get_page(url))
             except errors.APIGetError:
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
@@ -37,12 +38,57 @@ class Post(object):
 
     @property
     def id(self):
-        """Returns the ID number of the tag."""
+        """Returns the ID number of the post."""
         return self._data['id']
     @id.setter
     def id(self, value):
         self._data['id'] = value
 
+    @property
+    def creator(self):
+        """Returns the username of the poster."""
+        return self._data['creator']
+    @creator.setter
+    def creator(self, value):
+        self._data['creator'] = value
+
+    @property
+    def creator_id(self):
+        """Returns the ID number of the poster."""
+        return self._data['creator_id']
+    @creator_id.setter
+    def creator_id(self, value):
+        self._data['creator_id'] = value
+
+    @property
+    def parent_id(self):
+        """Returns the ID of the parent thread."""
+        return self._data['parent_id']
+    @parent_id.setter(self, value):
+        self._data['parent_id'] = value
+
+    @property
+    def title(self):
+        """Returns the title of the post."""
+        return self._data['title']
+    @title.setter
+    def title(self, value):
+        self._data['title'] = value
+
+    @property
+    def body(self):
+        """Returns the post's body."""
+        return self._data['body']
+    @body.setter
+    def body(self, value):
+        self._data['body'] = value
+
+    @property
+    def parent(self):
+        """Returns an object for the post's parent thread."""
+        return Thread(self.parent_id)
+
 
 class Thread(object):
-    pass
+    def __init__(self, thread_id=None, thread_data=None):
+        pass
