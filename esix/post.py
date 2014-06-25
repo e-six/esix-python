@@ -122,8 +122,7 @@ class Post(object):
         if post_id is not None:
             try:
                 post_data = api._get_data_obj(api._get_page(
-                    config.BASE_URL + '/post/show.json?id=' + str(post_id)
-                ))
+                    config.BASE_URL + '/post/show.json?id=' + str(post_id)))
             except errors.APIGetError:
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')
