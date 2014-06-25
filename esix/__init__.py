@@ -8,6 +8,7 @@ __author__ = "Alex Schaeffer"
 __copyright__ = "Copyright (c)2014, " + __author__
 
 __all__ = ["api", "file", "config", "errors", "post",
-           "comment", "user", "tag", "pool", "takedown"]
+           "comment", "user", "tag", "pool", "takedown",
+           "forum"]
 
 from . import *
