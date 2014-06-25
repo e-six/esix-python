@@ -129,6 +129,8 @@ class Thread(object):
         for post_data in replies:
             self._replies.append(Post(post_data=post_data))
         self._replies = list(reversed(self._replies))
+        # TODO only currently loads last 100 replies.
+        # Use url+'&page=#' to fetch more replies
 
     @property
     def id(self):
