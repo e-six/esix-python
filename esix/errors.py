@@ -156,6 +156,24 @@ class BadTakedownError(TakedownError):
     """
     pass
 
+class ForumError(APIException):
+    """
+    Error trying to retrieve forum post/thread information.
+    """
+    pass
+
+class ForumPostNotFoundError(ForumError):
+    """
+    The requested forum post cannot be found.
+    """
+    pass
+
+class BadForumPostError(ForumError):
+    """
+    A forum post object is not structured correctly, or data is missing.
+    """
+    pass
+
 class FileError(APIException):
     """
     An error occured during the handling of local files.
