@@ -6,11 +6,14 @@ Forum class for the e621 API.
 from . import api, config, errors
 
 def recent():
-    """Return a generator of recent forum threads.
+    """Return a generator of the 30 most recent forum threads.
 
     :returns: A generator of thread objects.
     :rtype: generator object
     """
+    url = config.BASE_URL + 'forum/index.json'
+    for thread_data in api._get_data_obj(api._get_page(url)):
+        yield Thread(thread_data=thread_data)
     pass
 
 
@@ -18,7 +21,7 @@ class Post(object):
     def __init__(self, post_id=None, post_data=None):
         """Create an instance of a forum post.
 
-        :param post_id: The ID number of the tag to fetch online.
+        :param post_id: The ID number of the post to fetch online.
         :type post_id: int
         :param post_data: Raw data to load directly into the object.
         :type post_data: dict
@@ -92,4 +95,97 @@ class Post(object):
 
 class Thread(object):
     def __init__(self, thread_id=None, thread_data=None):
-        pass
+        """Create an instance of a forum thread.
+
+        :param thread_id: The ID number of the thread to fetch online.
+        :type thread_id: int
+        :param thread_data: Raw data to load directly into the object.
+        :type thread_data: dict
+        """
+        self._op = None
+        self._replies = None
+        if thread_id is None and thread_data is None: return
+        if thread_id is not None:
+            # Get OP data
+            url = config.BASE_URL + 'forum/show.json?id='+str(thread_id)
+            try: self._op = Post(thread_id)
+            except errors.APIGetError:
+                raise errors.ForumPostNotFoundError('The requested forum ' +\
+                    'thread could not be found.')
+            # Get replies data
+            self._load_replies()
+        if thread_data is not None:
+            self._op = Post(post_data=thread_data)
+            if 'replies' in thread_data:
+                self._replies = []
+                for post_data in thread_data['replies']:
+                    self._replies.append(Post(post_data=post_data))
+                self._replies = list(reversed(self._replies))
+
+    def _load_replies(self):
+        url = config.BASE_URL + 'forum/index.json?parent_id=' + str(self.id)
+        replies = api._get_data_obj(api._get_page(url))
+        self._replies = []
+        for post_data in replies:
+            self._replies.append(Post(post_data=post_data))
+        self._replies = list(reversed(self._replies))
+
+    @property
+    def id(self):
+        """Return the ID of the thread."""
+        return self._op.id
+    @id.setter
+    def id(self, value):
+        self._op.id = value
+    
+    @property
+    def creator(self):
+        """Return the thread's original poster."""
+        return self._op.creator
+    @creator.setter
+    def creator(self, value):
+        self._op.creator = value
+    
+    @property
+    def creator_id(self):
+        """Return the thread's creator's ID."""
+        return self._op.creator_id
+    @creator_id.setter
+    def creator_id(self, value):
+        self._op.creator_id = value
+    
+    @property
+    def title(self):
+        """Return the original thread title."""
+        return self._op.title
+    @title.setter
+    def title(self, value):
+        self._op.title = value
+    
+    @property
+    def body(self):
+        """Return the OP's body."""
+        return self._op.body
+    @body.setter
+    def body(self, value):
+        self._op.body = value
+
+    @property
+    def num_replies(self):
+        """Return the number of replies the thread has (excluding the OP)."""
+        if self._replies is None: self._load_replies()
+        return len(self._replies)
+    
+    @property
+    def replies(self):
+        if self._replies is None: return None
+        for r in self._replies:
+            yield r
+
+    def get_reply(self,index):
+        """Return the given reply by index, None if it does not exist."""
+        if index == 0: return self._op
+        if self._replies is None: return None
+        try: return self._replies[index-1]
+        except: return None
+    
