@@ -64,7 +64,8 @@ class Post(object):
     def parent_id(self):
         """Returns the ID of the parent thread."""
         return self._data['parent_id']
-    @parent_id.setter(self, value):
+    @parent_id.setter
+    def parent_id(self, value):
         self._data['parent_id'] = value
 
     @property
