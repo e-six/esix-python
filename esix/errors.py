@@ -185,3 +185,8 @@ class FileNotFoundError(FileError):
     The requested file could not be found.
     """
     pass
+
+class FileDownloadError(FileError):
+    """
+    The requested image could not be downloaded.
+    """
