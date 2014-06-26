@@ -13,7 +13,7 @@ def recent():
     :rtype: generator object
     """
     url = config.BASE_URL + 'comment/index.json'
-    for comment_data in api._get_data_obj(api._get_page(url)):
+    for comment_data in api._fetch_data(url):
         yield Comment(comment_data=comment_data)
 
 

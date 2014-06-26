@@ -48,7 +48,7 @@ class Tag(object):
             except ValueError: id_type = 'name'
             else: id_type = 'id'
             url = config.BASE_URL + 'tag/index.json?'+id_type+'='+str(tag_id)
-            tag_list = api._get_data_obj(api._get_page(url))
+            tag_list = api._fetch_data(url)
             if len(tag_list) == 0:
                 raise errors.TagNotFoundError('The requested tag ' +\
                     'could not be found.')
@@ -116,5 +116,5 @@ class Tag(object):
     def related(self):
         """Returns a generator of related tags."""
         url = config.BASE_URL + 'tag/related.json?tags=' + str(self.name)
-        for tag in api._get_data_obj(api._get_page(url))[self.name][1::]:
+        for tag in api._fetch_data(url)[self.name][1::]:
             yield Tag(tag[0])

@@ -15,7 +15,7 @@ def recent_posts(limit=75):
     :rtype: generator object
     """
     url = config.BASE_URL + 'post/index.json?limit=' + str(limit)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def search(query, limit=75):
@@ -61,7 +61,7 @@ def popular_by_day(year=None, month=None, day=None):
     url = config.BASE_URL + 'post/popular_by_day.json'
     if day and month and year:
         url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def popular_by_week(year=None, month=None, day=None):
@@ -79,7 +79,7 @@ def popular_by_week(year=None, month=None, day=None):
     url = config.BASE_URL + 'post/popular_by_week.json'
     if day and month and year:
         url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def popular_by_month(year=None, month=None):
@@ -95,7 +95,7 @@ def popular_by_month(year=None, month=None):
     url = config.BASE_URL + 'post/popular_by_month.json'
     if month and year:
         url += '?month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 
@@ -356,7 +356,7 @@ class Post(object):
     def favorited_users(self):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
+        try: data = api._fetch_data(url)
         except errors.APIGetError: return None
         for username in data['favorited_users'].split(','):
             yield user.User(username)
@@ -366,7 +366,7 @@ class Post(object):
         """Returns a generator of tag changes for this post."""
         url = config.BASE_URL + 'post_tag_history/index.json?post_id=' +\
               str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
+        try: data = api._fetch_data(url)
         except errors.APIGetError: return None
         for tag_change in data:
             yield tag_change
@@ -376,7 +376,7 @@ class Post(object):
         """Returns a generator of flags for this post."""
         url = config.BASE_URL + 'post_flag_history/index.json?post_id=' +\
               str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
+        try: data = api._fetch_data(url)
         except errors.APIGetError: return None
         for flag in data: yield flag
 
@@ -384,7 +384,7 @@ class Post(object):
     def comments(self):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
+        try: data = api._fetch_data(url)
         except errors.APIGetError: return None
         for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)

@@ -12,7 +12,7 @@ def recent():
     :rtype: generator object
     """
     url = config.BASE_URL + 'forum/index.json'
-    for thread_data in api._get_data_obj(api._get_page(url)):
+    for thread_data in api._fetch_data(url):
         yield Thread(thread_data=thread_data)
     pass
 
@@ -33,7 +33,7 @@ class Post(object):
         if post_id is None and post_data is None: return
         if post_id is not None:
             url = config.BASE_URL + 'forum/show.json?id='+str(post_id)
-            try: post_data = api._get_data_obj(api._get_page(url))
+            try: post_data = api._fetch_data(url)
             except errors.APIGetError:
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'post could not be found.')
@@ -124,7 +124,7 @@ class Thread(object):
 
     def _load_replies(self):
         url = config.BASE_URL + 'forum/index.json?parent_id=' + str(self.id)
-        replies = api._get_data_obj(api._get_page(url))
+        replies = api._fetch_data(url)
         self._replies = []
         for post_data in replies:
             self._replies.append(Post(post_data=post_data))

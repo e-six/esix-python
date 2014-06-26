@@ -38,7 +38,7 @@ def recent():
     :rtype: generator object
     """
     url = config.BASE_URL + 'pool/index.json'
-    for pool_data in api._get_data_obj(api._get_page(url)):
+    for pool_data in api._fetch_data(url):
         yield Pool(pool_data=pool_data)
 
 
