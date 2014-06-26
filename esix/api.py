@@ -9,21 +9,6 @@ import urllib.request
 from . import config, errors
 
 
-def _get_data_obj(page):
-    """Parse a JSON-structured HTTPResponse into a Python object.
-
-    :param page: The JSON URL to fetch.
-    :type page: HTTPResponse
-    :returns: The decoded JSON object, or None if an error occured.
-    :rtype: dict or list or None
-    """
-    data = None
-    try: data = json.loads(page.read().decode('utf-8'))
-    except (ValueError, AttributeError): pass
-    if data is None:
-        raise errors.JSONError('The supplied page data is not JSON-decodable.')
-    return data
-
 def _get_page(url):
     """Fetch the content from a given web URL.
 
@@ -65,3 +50,18 @@ def _post_data(data, url):
         err = e
     if err: raise errors.APIPostError(str(err))
     return result
+
+def _get_data_obj(page):
+    """Parse a JSON-structured HTTPResponse into a Python object.
+
+    :param page: The JSON-encoded page content to fetch.
+    :type page: HTTPResponse
+    :returns: The decoded JSON object, or None if an error occured.
+    :rtype: dict or list or None
+    """
+    data = None
+    try: data = json.loads(page.read().decode('utf-8'))
+    except (ValueError, AttributeError): pass
+    if data is None:
+        raise errors.JSONError('The supplied page data is not JSON-decodable.')
+    return data
