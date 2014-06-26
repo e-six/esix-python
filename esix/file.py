@@ -147,7 +147,9 @@ def download_image(post_obj, dest='./', name_format="{md5}.{file_ext}",
         filename += "." + post_obj.file_ext
     file = api._get_page(post_obj.file_url)
     if file and (not file_exists(dest,filename) or overwrite):
-        if 'text/html' in file.headers.get('Content-Type'): return False
+        if 'text/html' in file.headers.get('Content-Type'):
+            raise errors.FileDownloadError('An error occured attempting ' +\
+                'to download the image.')
         if not os.path.isdir(dest): os.makedirs(dest)
         with open(dest+filename,'wb') as out_file:
             shutil.copyfileobj(file,out_file)
