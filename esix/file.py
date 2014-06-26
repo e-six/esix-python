@@ -140,7 +140,8 @@ def download_image(post_obj, dest='./', name_format="{md5}.{file_ext}",
     name_format = name_format.replace("{","%(").replace("}",")s")
     if dest != './' and not dest.endswith('/'): dest += '/'
     if type(post_obj) is not post.Post or post_obj.file_url is None:
-        raise errors.PostError('Post is not a valid object or does not exist.')
+        raise errors.BadPostError('Post is not a valid object ' +\
+            'or does not exist.')
     filename = name_format % post_obj._data
     if not filename.endswith("."+post_obj.file_ext):
         filename += "." + post_obj.file_ext
