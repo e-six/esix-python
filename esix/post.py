@@ -6,7 +6,7 @@ Post class for the e621 API.
 from . import api, config, errors, comment, user
 
 
-def recent_posts(limit=75):
+def recent(limit=75):
     """Fetch the most recent posts from the site.
 
     :param limit: The number of posts to fetch, up to 100. Default 75.
