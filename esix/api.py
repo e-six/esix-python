@@ -15,7 +15,8 @@ def _get_page(url):
     :param url: The URL to fetch.
     :type url: str
     :returns: Content retrieved from URL, or None if an error occured.
-    :rtype: HTTPResponse or None
+    :rtype: HTTPResponse
+    :raises: errors.APIGetError
     """
     try:
         req = urllib.request.Request(url,
@@ -34,7 +35,8 @@ def _post_data(data, url):
     :param url: The URL to post to.
     :type url: str
     :returns: Content of the response, or None if an error occured.
-    :rtype: HTTPResponse or None
+    :rtype: HTTPResponse
+    :raises: errors.APIPostError
     """
     err = None
     try:
@@ -56,8 +58,9 @@ def _get_data_obj(page):
 
     :param page: The JSON-encoded page content to fetch.
     :type page: HTTPResponse
-    :returns: The decoded JSON object, or None if an error occured.
-    :rtype: dict or list or None
+    :returns: The decoded JSON object.
+    :rtype: dict or list
+    :raises: errors.JSONError
     """
     data = None
     try: data = json.loads(page.read().decode('utf-8'))
@@ -65,3 +68,13 @@ def _get_data_obj(page):
     if data is None:
         raise errors.JSONError('The supplied page data is not JSON-decodable.')
     return data
+
+def _fetch_data(url):
+	"""Fetches a URL's page content, then converts it into a JSON object.
+
+	:param url: The URL of the JSON-encoded page.
+	:type url: str
+	:returns: The decoded JSON object.
+	:rtype: dict
+	"""
+	return _get_data_obj(_get_page(url))
