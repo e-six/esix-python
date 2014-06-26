@@ -37,7 +37,7 @@ def search(query, limit=75):
     page = 1
     end = False
     while not end:
-        rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+        rs = api._fetch_data(url+'&page='+str(page))
         result += len(rs)
         for post_data in rs:
             yield Post(post_data=post_data)
@@ -121,8 +121,8 @@ class Post(object):
         if post_id is None and post_data is None: return
         if post_id is not None:
             try:
-                post_data = api._get_data_obj(api._get_page(
-                    config.BASE_URL + '/post/show.json?id=' + str(post_id)))
+                post_data = api._fetch_data(
+                    config.BASE_URL + '/post/show.json?id=' + str(post_id))
             except errors.APIGetError:
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')

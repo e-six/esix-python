@@ -21,7 +21,7 @@ def search(title='', limit=5):
     page = 1
     end = False
     while not end:
-        rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+        rs = api._fetch_data(url+'&page='+str(page))
         result += len(rs)
         for pool_data in rs:
             yield Pool(pool_data=pool_data)
@@ -59,7 +59,7 @@ class Pool(object):
         if pool_id is None and pool_data is None: return
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
-            try: pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
+            try: pool_data = api._fetch_data(url+'&page=999')
             except errors.APIGetError:
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
@@ -151,7 +151,7 @@ class Pool(object):
         page = 1
         end = False
         while not end:
-            try: rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+            try: rs = api._fetch_data(url+'&page='+str(page))
             except errors.APIGetError: return None
             for post_data in rs['posts']:
                 yield post.Post(post_data=post_data)

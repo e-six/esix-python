@@ -24,10 +24,10 @@ class Takedown(object):
         if takedown_id is None and takedown_data is None: return
         if takedown_id is not None:
             try:
-                takedown_data = api._get_data_obj(api._get_page(
+                takedown_data = api._fetch_data(
                     config.BASE_URL + '/takedown/show.json?id=' + \
                     str(takedown_id)
-                ))
+                )
             except errors.JSONError:
                 raise errors.TakedownNotFoundError('The requested takedown ' +\
                     'could not be found.')

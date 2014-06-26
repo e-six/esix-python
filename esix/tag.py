@@ -20,7 +20,7 @@ def all_tags(page=1, limit=2):
     result = 0
     end = False
     while not end:
-        rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+        rs = api._fetch_data(url+'&page='+str(page))
         result += len(rs)
         for tag_data in rs:
             yield Tag(tag_data=tag_data)
