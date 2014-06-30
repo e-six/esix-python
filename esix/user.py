@@ -137,3 +137,12 @@ class User(object):
               'user_id='+str(self.id)
         for flag in api._fetch_data(url):
             yield flag
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include tag history or flag history.
+
+        :returns: All locally-stored user data.
+        :rtype: dict
+        """
+        return self._data

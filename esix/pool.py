@@ -159,3 +159,12 @@ class Pool(object):
                 end = True
                 break
             page += 1
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include the list of posts.
+
+        :returns: All locally-stored pool data.
+        :rtype: dict
+        """
+        return self._data

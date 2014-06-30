@@ -118,3 +118,12 @@ class Tag(object):
         url = config.BASE_URL + 'tag/related.json?tags=' + str(self.name)
         for tag in api._fetch_data(url)[self.name][1::]:
             yield Tag(tag[0])
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include the result of type_str or related tags.
+
+        :returns: All locally-stored tag data.
+        :rtype: dict
+        """
+        return self._data

@@ -147,3 +147,11 @@ class Takedown(object):
     @posts.setter
     def posts(self, value):
         self._data['posts'] = value
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+
+        :returns: All locally-stored takedown data.
+        :rtype: dict
+        """
+        return self._data

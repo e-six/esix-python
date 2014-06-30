@@ -406,3 +406,13 @@ class Post(object):
         send_vote = api._get_data_obj(
             api._post_data(data,config.BASE_URL+'post/vote.json'))
         return send_vote
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include favorited users, tag history, flag history
+        or comments.
+
+        :returns: All locally-stored post data.
+        :rtype: dict
+        """
+        return self._data

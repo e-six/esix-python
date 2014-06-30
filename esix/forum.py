@@ -92,6 +92,14 @@ class Post(object):
         """Returns an object for the post's parent thread."""
         return Thread(self.parent_id)
 
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+
+        :returns: All locally-stored forum post data.
+        :rtype: dict
+        """
+        return self._data
+
 
 class Thread(object):
     def __init__(self, thread_id=None, thread_data=None):
@@ -190,4 +198,14 @@ class Thread(object):
         if self._replies is None: return None
         try: return self._replies[index-1]
         except: return None
-    
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include replies if they have not been loaded.
+
+        :returns: All locally-stored forum thread data.
+        :rtype: dict
+        """
+        return dict(self._op.dump_data(), **{
+            'replies':[r.dump_data() for r in self.replies]
+        })

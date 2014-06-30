@@ -119,3 +119,11 @@ class Comment(object):
         }
         return api._get_data_obj(
             api._post_data(data,config.BASE_URL+'comment/create.json'))
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+
+        :returns: All locally-stored comment data.
+        :rtype: dict
+        """
+        return self._data
