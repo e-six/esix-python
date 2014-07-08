@@ -3,6 +3,11 @@
 Post class for the e621 API.
 """
 
+import os
+import shutil
+try: import win32api, win32con
+except ImportError: pass
+
 from . import api, config, errors, comment, user
 
 
@@ -416,3 +421,59 @@ class Post(object):
         :rtype: dict
         """
         return self._data
+
+    def _downlaod_metadata(folder):
+    """Save the post's information locally.
+
+    :param folder: The folder in which metadata will be stored
+        (in a .metadata/ subfolder)
+    :type folder: str
+    :returns: Whether or not the operation was successful.
+    :rtype: bool
+    """
+    if folder != './' and not folder.endswith('/'): folder += '/'
+    if not os.path.exists(folder + '.metadata/'):
+        os.makedirs(folder + '.metadata/')
+        try:
+            win32api.SetFileAttributes(folder+'.metadata/',
+                                       win32con.FILE_ATTRIBUTE_HIDDEN)
+        except: pass
+    try:
+        with open(folder + '.metadata/' + self.md5, 'w') as meta_file:
+            meta_file.write(json.dumps(self._data))
+        return True
+    except: return False
+
+    def download(dest='./', name_format="{md5}.{file_ext}",
+                   overwrite=False, write_metadata=False):
+    """Downloads the post object as an image.
+
+    :param dest: The folder to download to. Default is script directory.
+    :type dest: str
+    :param name_format: The format of the filename, post data keywords
+        should be surrounded by {}. Default {md5}.{file_ext}
+    :type name_format: str
+    :param overwrite: If True, will overwrite existing files with the
+        same name. Default False.
+    :type overwrite: bool
+    :returns: Whether or not the download succeeded.
+    :rtype: bool
+    """
+    name_format = name_format.replace("{","%(").replace("}",")s")
+    if dest != './' and not dest.endswith('/'): dest += '/'
+    if self.file_url is None:
+        raise errors.BadPostError('No file URL found.')
+    filename = name_format % self._data
+    if not filename.endswith("." + self.file_ext):
+        filename += "." + self.file_ext
+    file = api._get_page(self.file_url)
+    if file and (not file_exists(dest,filename) or overwrite):
+        if 'text/html' in file.headers.get('Content-Type'):
+            raise errors.FileDownloadError('An error occured attempting ' +\
+                'to download the image.')
+        if not os.path.isdir(dest): os.makedirs(dest)
+        with open(dest+filename,'wb') as out_file:
+            shutil.copyfileobj(file,out_file)
+        if write_metadata: store_post_data(self,dest)
+        return True
+    return False
