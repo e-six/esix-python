@@ -467,7 +467,7 @@ class Post(object):
         if not filename.endswith("." + self.file_ext):
             filename += "." + self.file_ext
         file = api._get_page(self.file_url)
-        if file and (not file_exists(dest,filename) or overwrite):
+        if file and (not os.path.isfile(dest + filename) or overwrite):
             if 'text/html' in file.headers.get('Content-Type'):
                 raise errors.FileDownloadError('An error occured attempting ' +\
                     'to download the image.')
