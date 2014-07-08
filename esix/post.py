@@ -422,7 +422,7 @@ class Post(object):
         """
         return self._data
 
-    def _downlaod_metadata(folder):
+    def _downlaod_metadata(self, folder):
         """Save the post's information locally.
 
         :param folder: The folder in which metadata will be stored
@@ -444,7 +444,7 @@ class Post(object):
             return True
         except: return False
 
-    def download(dest='./', name_format="{md5}.{file_ext}", 
+    def download(self, dest='./', name_format="{md5}.{file_ext}", 
         overwrite=False, write_metadata=False):
         """Downloads the post object as an image.
 
