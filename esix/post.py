@@ -458,12 +458,13 @@ class Post(object):
         """
         if folder != './' and not folder.endswith('/'): folder += '/'
         if not os.path.exists(folder): os.makedirs(folder)
+        data = self._data
+        data['comments'] = []
+        if comments:
+            for c in self.comments: data['comments'].append(c.dump_data())
         try:
             with open(folder + self.md5, 'w') as meta_file:
-                meta_file.write(json.dumps(self._data))
-                if comments:
-                    for c in self.comments:
-                        meta_file.write(json.dumps(c.dump_data()))
+                meta_file.write(json.dumps(data))
             return True
         except: return False
 
