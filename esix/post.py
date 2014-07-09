@@ -3,6 +3,7 @@
 Post class for the e621 API.
 """
 
+import json
 import os
 import shutil
 try: import win32api, win32con
@@ -474,6 +475,6 @@ class Post(object):
             if not os.path.isdir(dest): os.makedirs(dest)
             with open(dest+filename,'wb') as out_file:
                 shutil.copyfileobj(file,out_file)
-            if write_metadata: store_post_data(self,dest)
+            if write_metadata: self._downlaod_metadata(dest)
             return True
         return False
