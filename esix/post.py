@@ -7,8 +7,6 @@ import hashlib
 import json
 import os
 import shutil
-try: import win32api, win32con
-except ImportError: pass
 
 from . import api, config, errors, comment, user
 
@@ -459,10 +457,6 @@ class Post(object):
         if folder != './' and not folder.endswith('/'): folder += '/'
         if not os.path.exists(folder + '.metadata/'):
             os.makedirs(folder + '.metadata/')
-            try:
-                win32api.SetFileAttributes(folder+'.metadata/',
-                                           win32con.FILE_ATTRIBUTE_HIDDEN)
-            except: pass
         try:
             with open(folder + '.metadata/' + self.md5, 'w') as meta_file:
                 meta_file.write(json.dumps(self._data))
