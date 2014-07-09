@@ -30,14 +30,16 @@ class Post(object):
         for prop in ['id',  'creator',  'creator_id',
                      'parent_id',  'title',    'body']:
             self._data[prop] = None
-        if post_id is None and post_data is None: return
         if post_id is not None:
             url = config.BASE_URL + 'forum/show.json?id='+str(post_id)
-            try: post_data = api._fetch_data(url)
+            try:
+                data = api._fetch_data(url)
+                for prop in data: self._data[prop] = data[prop]
             except errors.APIGetError:
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'post could not be found.')
-        for prop in post_data: self._data[prop] = post_data[prop]
+        if post_data is not None:
+            for prop in post_data: self._data[prop] = post_data[prop]
 
     @property
     def id(self):
@@ -112,7 +114,6 @@ class Thread(object):
         """
         self._op = None
         self._replies = None
-        if thread_id is None and thread_data is None: return
         if thread_id is not None:
             # Get OP data
             url = config.BASE_URL + 'forum/show.json?id='+str(thread_id)

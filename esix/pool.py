@@ -56,15 +56,17 @@ class Pool(object):
                      'updated_at', 'post_count', 'is_public',
                      'is_active', 'description']:
             self._data[prop] = None
-        if pool_id is None and pool_data is None: return
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
-            try: pool_data = api._fetch_data(url+'&page=999')
+            try:
+                data = api._fetch_data(url+'&page=999')
+                for prop in data: self._data[prop] = data[prop]
             except errors.APIGetError:
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
             if 'posts' in pool_data: del(pool_data['posts'])
-        for prop in pool_data: self._data[prop] = pool_data[prop]
+        if pool_data is not None:
+            for prop in pool_data: self._data[prop] = pool_data[prop]
 
     @property
     def id(self):

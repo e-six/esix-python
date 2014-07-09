@@ -61,7 +61,6 @@ class User(object):
         for prop in ['id', 'name', 'level', 'created_at',
                      'blacklisted', 'subscriptions']:
             self._data[prop] = None
-        if user_id is None and user_data is None: return
         if user_id is not None:
             try: int(user_id)
             except ValueError: id_type = 'name'
@@ -71,8 +70,11 @@ class User(object):
             if len(user_list) == 0:
                 raise errors.UserNotFoundError('User '+str(user_id)+\
                                                ' not found.')
-            else: user_data = user_list[0]
-        for prop in user_data: self._data[prop] = user_data[prop]
+            else:
+                data = user_list[0]
+                for prop in data: self._data[prop] = data[prop]
+        if user_data is not None:
+            for prop in user_data: self._data[prop] = user_data[prop]
 
     @property
     def id(self):

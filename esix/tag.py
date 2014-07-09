@@ -42,7 +42,6 @@ class Tag(object):
         self._data = {}
         for prop in ['id', 'name', 'ambiguous', 'type', 'count']:
             self._data[prop] = None
-        if tag_id is None and tag_data is None: return
         if tag_id is not None:
             try: int(tag_id)
             except ValueError: id_type = 'name'
@@ -52,8 +51,11 @@ class Tag(object):
             if len(tag_list) == 0:
                 raise errors.TagNotFoundError('The requested tag ' +\
                     'could not be found.')
-            else: tag_data = tag_list[0]
-        for prop in tag_data: self._data[prop] = tag_data[prop]
+            else:
+                data = tag_list[0]
+                for prop in data: self._data[prop] = data[prop]
+        if tag_data is not None:
+            for prop in tag_data: self._data[prop] = tag_data[prop]
 
     @property
     def id(self):

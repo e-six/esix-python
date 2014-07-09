@@ -21,17 +21,18 @@ class Takedown(object):
                      'notes', 'approver', 'vericode',
                      'ip_addr', 'hidereason', 'delposts']:
             self._data[prop] = None
-        if takedown_id is None and takedown_data is None: return
         if takedown_id is not None:
             try:
-                takedown_data = api._fetch_data(
+                data = api._fetch_data(
                     config.BASE_URL + '/takedown/show.json?id=' + \
                     str(takedown_id)
                 )
+                for prop in data: self._data[prop] = data[prop]
             except errors.JSONError:
                 raise errors.TakedownNotFoundError('The requested takedown ' +\
                     'could not be found.')
-        for prop in takedown_data: self._data[prop] = takedown_data[prop]
+        if takedown_data is not None:
+            for prop in takedown_data: self._data[prop] = takedown_data[prop]
 
     @property
     def id(self):

@@ -146,15 +146,16 @@ class Post(object):
                      'created_at', 'change', 'height', 'width',
                      'preview_width', 'creator_id', 'rating']:
             self._data[prop] = None
-        if post_id is None and post_data is None: return
         if post_id is not None:
             try:
-                post_data = api._fetch_data(
+                data = api._fetch_data(
                     config.BASE_URL + '/post/show.json?id=' + str(post_id))
+                for prop in data: self._data[prop] = data[prop]
             except errors.APIGetError:
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')
-        for prop in post_data: self._data[prop] = post_data[prop]
+        if post_data is not None:
+            for prop in post_data: self._data[prop] = post_data[prop]
 
     @property
     def id(self):
@@ -385,9 +386,7 @@ class Post(object):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError:
-            yield None
-            return
+        except errors.APIGetError: return
         for username in data['favorited_users'].split(','):
             yield user.User(username)
 
@@ -397,9 +396,7 @@ class Post(object):
         url = config.BASE_URL + 'post_tag_history/index.json?post_id=' +\
               str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError:
-            yield None
-            return
+        except errors.APIGetError: return
         for tag_change in data:
             yield tag_change
 
@@ -409,9 +406,7 @@ class Post(object):
         url = config.BASE_URL + 'post_flag_history/index.json?post_id=' +\
               str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError:
-            yield None
-            return
+        except errors.APIGetError: return
         for flag in data: yield flag
 
     @property
@@ -419,9 +414,7 @@ class Post(object):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError:
-            yield None
-            return
+        except errors.APIGetError: return
         for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)
 

@@ -30,23 +30,24 @@ class Comment(object):
         for prop in ['creator', 'post_id', 'created_at', 'id',
                      'body', 'score', 'creator_id']:
             self._data[prop] = None
-        if comment_id is None and comment_data is None: return
         if comment_id is not None:
             # if not config.USERNAME and not config.PASSWORD:
             #     raise errors.APIUnauthorizedError('You must be logged in to ' +\
             #                                       'find a comment by ID.')
             try:
-                comment_data = api._get_data_obj(api._post_data(
+                data = api._get_data_obj(api._post_data(
                     {
                         'id':str(comment_id),
                         'login':str(config.USERNAME),
                         'password_hash':str(config.PASSWORD)
                     },
                     config.BASE_URL + 'comment/show.json'))
+                for prop in data: self._data[prop] = data[prop]
             except:
                 raise errors.CommentNotFoundError('The requested comment ' +\
                     'could not be found.')
-        for prop in comment_data: self._data[prop] = comment_data[prop]
+        if comment_data is not None:
+            for prop in comment_data: self._data[prop] = comment_data[prop]
 
     @property
     def id(self):
