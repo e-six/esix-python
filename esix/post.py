@@ -3,6 +3,7 @@
 Post class for the e621 API.
 """
 
+import hashlib
 import json
 import os
 import shutil
@@ -103,6 +104,29 @@ def popular_by_month(year=None, month=None):
         url += '?month='+str(month)+'&year='+str(year)
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
+
+def from_file(folder, filename):
+    """Generate a Post object based on locally-stored information for a file.
+
+    :param folder: The folder the image is stored in.
+    :type folder: str
+    :param filename: The name of the file to load
+    :type filename: str
+    :returns: A Post object based on the file.
+    :rtype: post.Post object
+    :raises: errors.BadPostError
+    """
+    if folder != "./" and not folder.endswith("/"): folder += "/"
+    try:
+        with open(folder + filename, 'rb') as f:
+            md5 = hashlib.md5(f.read()).hexdigest()
+    except:
+        raise errors.BadPostError("An error occured loading the " +\
+            "specified file's metadata.")
+    try: data = json.load(open(folder + '.metadata/' + md5))
+    except:
+        raise errors.JSONError("An error occured parsing the JSON data.")
+    return Post(post_data=data)
 
 
 class Post(object):
