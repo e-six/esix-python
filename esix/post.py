@@ -445,7 +445,7 @@ class Post(object):
         """
         return self._data
 
-    def _downlaod_metadata(self, folder):
+    def downlaod_metadata(self, folder):
         """Save the post's information locally.
 
         :param folder: The folder in which metadata will be stored
@@ -455,10 +455,9 @@ class Post(object):
         :rtype: bool
         """
         if folder != './' and not folder.endswith('/'): folder += '/'
-        if not os.path.exists(folder + '.metadata/'):
-            os.makedirs(folder + '.metadata/')
+        if not os.path.exists(folder): os.makedirs(folder)
         try:
-            with open(folder + '.metadata/' + self.md5, 'w') as meta_file:
+            with open(folder + self.md5, 'w') as meta_file:
                 meta_file.write(json.dumps(self._data))
             return True
         except: return False
@@ -493,6 +492,6 @@ class Post(object):
             if not os.path.isdir(dest): os.makedirs(dest)
             with open(dest+filename,'wb') as out_file:
                 shutil.copyfileobj(file,out_file)
-            if write_metadata: self._downlaod_metadata(dest)
+            if write_metadata: self.downlaod_metadata(dest + '.metadata/')
             return True
         return False
