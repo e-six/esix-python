@@ -385,7 +385,9 @@ class Post(object):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return None
+        except errors.APIGetError:
+            yield None
+            return
         for username in data['favorited_users'].split(','):
             yield user.User(username)
 
@@ -395,7 +397,9 @@ class Post(object):
         url = config.BASE_URL + 'post_tag_history/index.json?post_id=' +\
               str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return None
+        except errors.APIGetError:
+            yield None
+            return
         for tag_change in data:
             yield tag_change
 
@@ -405,7 +409,9 @@ class Post(object):
         url = config.BASE_URL + 'post_flag_history/index.json?post_id=' +\
               str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return None
+        except errors.APIGetError:
+            yield None
+            return
         for flag in data: yield flag
 
     @property
@@ -413,7 +419,9 @@ class Post(object):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return None
+        except errors.APIGetError:
+            yield None
+            return
         for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)
 

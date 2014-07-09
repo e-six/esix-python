@@ -188,7 +188,10 @@ class Thread(object):
     
     @property
     def replies(self):
-        if self._replies is None: return None
+        """Return a generator of replies in the thread."""
+        if self._replies is None:
+            yield None
+            return
         for r in self._replies:
             yield r
 

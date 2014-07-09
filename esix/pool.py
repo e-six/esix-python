@@ -152,7 +152,9 @@ class Pool(object):
         end = False
         while not end:
             try: rs = api._fetch_data(url+'&page='+str(page))
-            except errors.APIGetError: return None
+            except errors.APIGetError:
+                yield None
+                return
             for post_data in rs['posts']:
                 yield post.Post(post_data=post_data)
             if rs is None or len(rs['posts']) == 0:
