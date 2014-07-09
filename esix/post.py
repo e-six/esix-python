@@ -445,7 +445,7 @@ class Post(object):
         """
         return self._data
 
-    def downlaod_metadata(self, folder):
+    def download_metadata(self, folder):
         """Save the post's information locally.
 
         :param folder: The folder in which metadata will be stored
