@@ -108,7 +108,6 @@ class Comment(object):
 
         :returns: Whether the post was successful.
         :rtype: bool
-        :raises: errors.APIException
         """
         raise errors.APIException('Function not ready. Need to test.')
         data = {
