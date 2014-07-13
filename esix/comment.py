@@ -108,8 +108,12 @@ class Comment(object):
 
         :returns: Whether the post was successful.
         :rtype: bool
+        :raises errors.APIUnauthorizedError
         """
         raise errors.APIException('Function not ready. Need to test.')
+        if not config.USERNAME and not config.PASSWORD:
+            raise errors.APIUnauthorizedError('You must be logged in to ' +\
+                'post a comment.')
         data = {
             'post_id':str(self.id),
             'comment':str(self.body),
