@@ -15,7 +15,6 @@ def all_tags(page=1, limit=2):
     :returns: A generator of tags matching the query.
     :rtype: generator object
     """
-    raise errors.APIException('Not ready. Page parameter not working.')
     url = config.BASE_URL + 'tag/index.json?order=name'
     result = 0
     end = False
