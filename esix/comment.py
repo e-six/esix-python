@@ -32,9 +32,6 @@ class Comment(object):
                      'body', 'score', 'creator_id']:
             self._data[prop] = None
         if comment_id is not None:
-            # if not config.USERNAME and not config.PASSWORD:
-            #     raise errors.APIUnauthorizedError('You must be logged in to ' +\
-            #                                       'find a comment by ID.')
             try:
                 data = api._get_data_obj(api._post_data(
                     {
