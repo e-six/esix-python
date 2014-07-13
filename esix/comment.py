@@ -16,6 +16,22 @@ def recent():
     for comment_data in api._fetch_data(url):
         yield Comment(comment_data=comment_data)
 
+def submit(post_id, body):
+    """Create and submit a comment on a post.
+
+    :param post_id: The ID number of the post to comment on.
+    :type post_id: int
+    :param body: The comment body.
+    :type body: str
+    :returns: The JSON result of the comment submit request
+    :rtype: dict
+    """
+    comment = Comment(comment_data = {
+        'post_id': post_id,
+        'body': body
+        })
+    return comment.submit()
+
 
 class Comment(object):
     def __init__(self, comment_id=None, comment_data=None):
