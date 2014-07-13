@@ -50,6 +50,7 @@ class Pool(object):
         :type pool_id: int
         :param pool_data: Raw data to load directly into the object.
         :type pool_data: dict
+        :raises: errors.PoolNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'user_id', 'created_at',

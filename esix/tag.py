@@ -37,6 +37,7 @@ class Tag(object):
         :type tag_id: int
         :param tag_data: Raw data to load directly into the object.
         :type tag_data: dict
+        :raises: errors.TagNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'ambiguous', 'type', 'count']:

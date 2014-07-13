@@ -135,6 +135,7 @@ class Post(object):
         :type post_id: int
         :param post_data: Raw post data to be loaded directly into the object.
         :type post_data: dict
+        :raises: errors.PostNotFoundError
         """
         self._data = {}
         for prop in ['sources', 'file_ext', 'sample_width',
@@ -425,6 +426,7 @@ class Post(object):
         :type vote: int
         :returns: Whether the vote was successful.
         :rtype: bool
+        :raises: errors.APIException
         """
         raise errors.APIException('Not ready. Unordered Collection error.')
         if str(vote) != '1' and str(vote) != '-1': return False
@@ -483,6 +485,7 @@ class Post(object):
         :type overwrite: bool
         :returns: Whether or not the download succeeded.
         :rtype: bool
+        :raises: errors.BadPostError, errors.FileDownloadError
         """
         name_format = name_format.replace("{","%(").replace("}",")s")
         if dest != './' and not dest.endswith('/'): dest += '/'

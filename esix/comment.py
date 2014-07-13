@@ -25,6 +25,7 @@ class Comment(object):
         :type comment_id: int
         :param comment_data: Raw comment data, for loading directly into object.
         :type comment_data: dict
+        :raises: errors.CommentNotFoundError
         """
         self._data = {}
         for prop in ['creator', 'post_id', 'created_at', 'id',
@@ -110,6 +111,7 @@ class Comment(object):
 
         :returns: Whether the post was successful.
         :rtype: bool
+        :raises: errors.APIException
         """
         raise errors.APIException('Function not ready. Need to test.')
         data = {

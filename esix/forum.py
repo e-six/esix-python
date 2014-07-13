@@ -25,6 +25,7 @@ class Post(object):
         :type post_id: int
         :param post_data: Raw data to load directly into the object.
         :type post_data: dict
+        :raises: errors.ForumPostNotFoundError
         """
         self._data = {}
         for prop in ['id',  'creator',  'creator_id',
@@ -111,6 +112,7 @@ class Thread(object):
         :type thread_id: int
         :param thread_data: Raw data to load directly into the object.
         :type thread_data: dict
+        :raises: errors.ForumPostNotFoundError
         """
         self._op = None
         self._replies = None
