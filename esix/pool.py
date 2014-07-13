@@ -65,7 +65,7 @@ class Pool(object):
             except errors.APIGetError:
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
-            if 'posts' in pool_data: del(pool_data['posts'])
+            if 'posts' in data: del(data['posts'])
         if pool_data is not None:
             for prop in pool_data: self._data[prop] = pool_data[prop]
 
