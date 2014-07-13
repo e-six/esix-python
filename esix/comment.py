@@ -124,7 +124,7 @@ class Comment(object):
 
         :returns: Whether the post was successful.
         :rtype: bool
-        :raises errors.APIUnauthorizedError
+        :raises: errors.APIUnauthorizedError
         """
         raise errors.APIException('Function not ready. Need to test.')
         if not config.USERNAME and not config.PASSWORD:
