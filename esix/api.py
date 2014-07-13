@@ -47,7 +47,7 @@ def _post_data(data, url):
     try:
         req = urllib.request.Request(url,
                                      headers={'User-Agent':config.USER_AGENT})
-        result = urllib.request.urlopen(req,data)
+        result = urllib.request.urlopen(req, data)
     except (urllib.error.HTTPError, ValueError, urllib.error.URLError) as e:
         err = e
     if err: raise errors.APIPostError(str(err))
