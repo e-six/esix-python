@@ -42,15 +42,14 @@ def _post_data(data, url):
     try:
         data = urllib.parse.urlencode(data)
         data = data.encode('utf-8')
-    except TypeError as e: err = e
-    if err: raise errors.APIPostError('The data object is not URL-encodable.')
+    except TypeError:
+        raise errors.APIPostError('The data object is not URL-encodable.')
     try:
         req = urllib.request.Request(url,
                                      headers={'User-Agent':config.USER_AGENT})
         result = urllib.request.urlopen(req, data)
     except (urllib.error.HTTPError, ValueError, urllib.error.URLError) as e:
-        err = e
-    if err: raise errors.APIPostError(str(err))
+        raise errors.APIPostError(str(e))
     return result
 
 def _get_data_obj(page):
