@@ -131,8 +131,8 @@ class Comment(object):
             raise errors.APIUnauthorizedError('You must be logged in to ' +\
                 'post a comment.')
         data = {
-            'post_id':str(self.id),
-            'comment':str(self.body),
+            'comment[post_id]':str(self.id),
+            'comment[body]':str(self.body),
             'login':str(config.USERNAME),
             'password_hash':str(config.PASSWORD)
         }
