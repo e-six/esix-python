@@ -428,11 +428,15 @@ class Post(object):
         :rtype: bool
         :raises: errors.APIException
         """
-        raise errors.APIException('Not ready. Unordered Collection error.')
         if str(vote) != '1' and str(vote) != '-1': return False
+        if not config.USERNAME and not config.PASSWORD:
+            raise errors.APIUnauthorizedError('You must be logged in to ' +\
+                'vote on posts.')
         data = {
             'id':str(self.id),
-            'score':str(vote)
+            'score':str(vote),
+            'login':str(config.USERNAME),
+            'password_hash':str(config.PASSWORD)
         }
         send_vote = api._get_data_obj(
             api._post_data(data,config.BASE_URL+'post/vote.json'))
