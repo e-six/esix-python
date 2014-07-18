@@ -152,7 +152,7 @@ class Post(object):
                 data = api._fetch_data(
                     config.BASE_URL + '/post/show.json?id=' + str(post_id))
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')
         if post_data is not None:
@@ -387,7 +387,7 @@ class Post(object):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return
+        except (errors.APIGetError, errors.JSONError): return
         for username in data['favorited_users'].split(','):
             yield user.User(username)
 

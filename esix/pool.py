@@ -62,7 +62,7 @@ class Pool(object):
             try:
                 data = api._fetch_data(url+'&page=999')
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
             if 'posts' in data: del(data['posts'])
@@ -155,7 +155,7 @@ class Pool(object):
         end = False
         while not end:
             try: rs = api._fetch_data(url+'&page='+str(page))
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 yield None
                 return
             for post_data in rs['posts']:

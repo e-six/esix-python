@@ -4,7 +4,7 @@ Standard functions for e621's JSON API.
 """
 
 import json
-import urllib.request
+import requests
 
 from . import config, errors
 
@@ -18,13 +18,9 @@ def _get_page(url):
     :rtype: HTTPResponse
     :raises: errors.APIGetError
     """
-    try:
-        req = urllib.request.Request(url,
-                                     headers={'User-Agent':config.USER_AGENT})
-        page = urllib.request.urlopen(req)
-    except (urllib.error.HTTPError, ValueError, urllib.error.URLError):
-        page = None
-    if page is None: raise errors.APIGetError('Unable to open URL: '+str(url))
+    try: req = requests.get(url, headers={'User-Agent':config.USER_AGENT})
+    except Exception as e: raise errors.APIGetError(str(e))
+    page = req.text
     return page
 
 def _post_data(data, url):
@@ -40,16 +36,10 @@ def _post_data(data, url):
     """
     err = None
     try:
-        data = urllib.parse.urlencode(data)
-        data = data.encode('utf-8')
-    except TypeError:
-        raise errors.APIPostError('The data object is not URL-encodable.')
-    try:
-        req = urllib.request.Request(url,
-                                     headers={'User-Agent':config.USER_AGENT})
-        result = urllib.request.urlopen(req, data)
-    except (urllib.error.HTTPError, ValueError, urllib.error.URLError) as e:
-        raise errors.APIPostError(str(e))
+        req = requests.post(url, data=data, 
+            headers={'User-Agent':config.USER_AGENT})
+    except Exception as e: raise errors.APIPostError(str(e))
+    result = req.text
     return result
 
 def _get_data_obj(page):
@@ -61,10 +51,8 @@ def _get_data_obj(page):
     :rtype: dict or list
     :raises: errors.JSONError
     """
-    data = None
-    try: data = json.loads(page.read().decode('utf-8'))
-    except (ValueError, AttributeError): pass
-    if data is None:
+    try: data = json.loads(page)
+    except (ValueError, AttributeError):
         raise errors.JSONError('The supplied page data is not JSON-decodable.')
     return data
 
