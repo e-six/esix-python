@@ -6,6 +6,7 @@ An easy to use Python 3 frontend for e621.net's JSON API. Currently includes all
 ## Setup ##
 ### Dependencies ###
 * [Python 3](https://www.python.org/downloads/)
+* [Python Requests](http://docs.python-requests.org/en/latest/)
 
 ### Installing ###
 Simply run `python setup.py install` from your download directory. The package should automatically install to your Python directory. From there you can `import esix` in any Python script.
