@@ -52,7 +52,7 @@ class Comment(object):
                 data = api._get_data_obj(api._post_data({'id':str(comment_id)},
                     config.BASE_URL + 'comment/show.json'))
                 for prop in data: self._data[prop] = data[prop]
-            except:
+            except (errors.APIPostError, errors.JSONError):
                 raise errors.CommentNotFoundError('The requested comment ' +\
                     'could not be found.')
         if comment_data is not None:
