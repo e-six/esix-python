@@ -14,14 +14,13 @@ def _get_page(url):
 
     :param url: The URL to fetch.
     :type url: str
-    :returns: Content retrieved from URL, or None if an error occured.
+    :returns: Response retrieved from URL.
     :rtype: HTTPResponse
     :raises: errors.APIGetError
     """
     try: req = requests.get(url, headers={'User-Agent':config.USER_AGENT})
     except Exception as e: raise errors.APIGetError(str(e))
-    page = req.text
-    return page
+    return req
 
 def _post_data(data, url):
     """Post the given data object to the given URL.
@@ -30,7 +29,7 @@ def _post_data(data, url):
     :type data: dict or tuple
     :param url: The URL to post to.
     :type url: str
-    :returns: Content of the response, or None if an error occured.
+    :returns: Content of the response.
     :rtype: HTTPResponse
     :raises: errors.APIPostError
     """
@@ -39,8 +38,7 @@ def _post_data(data, url):
         req = requests.post(url, data=data, 
             headers={'User-Agent':config.USER_AGENT})
     except Exception as e: raise errors.APIPostError(str(e))
-    result = req.text
-    return result
+    return req
 
 def _get_data_obj(page):
     """Parse a JSON-structured HTTPResponse into a Python object.
