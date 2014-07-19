@@ -15,6 +15,7 @@ def login(username, password):
     :type password: str
     :returns: Your user object.
     :rtype: user.User
+    :raises: errors.APILoginError
     """
     result = api._get_data_obj(api._post_data(
         {
@@ -44,7 +45,7 @@ def search(user_id):
     except ValueError: id_type = 'name'
     else: id_type = 'id'
     url = config.BASE_URL + 'user/index.json?' + id_type + '=' + str(user_id)
-    for user_data in api._get_data_obj(api._get_page(url)):
+    for user_data in api._fetch_data(url):
         yield User(user_data=user_data)
 
 
@@ -56,23 +57,26 @@ class User(object):
         :type uesr_id: int
         :param user_data: Raw data to be loaded directly into the object.
         :type user_data: dict
+        :raises: errors.UserNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'level', 'created_at',
                      'blacklisted', 'subscriptions']:
             self._data[prop] = None
-        if user_id is None and user_data is None: return
         if user_id is not None:
             try: int(user_id)
             except ValueError: id_type = 'name'
             else: id_type = 'id'
             url = config.BASE_URL+'user/index.json?'+id_type+'='+str(user_id)
-            user_list = api._get_data_obj(api._get_page(url))
+            user_list = api._fetch_data(url)
             if len(user_list) == 0:
                 raise errors.UserNotFoundError('User '+str(user_id)+\
                                                ' not found.')
-            else: user_data = user_list[0]
-        for prop in user_data: self._data[prop] = user_data[prop]
+            else:
+                data = user_list[0]
+                for prop in data: self._data[prop] = data[prop]
+        if user_data is not None:
+            for prop in user_data: self._data[prop] = user_data[prop]
 
     @property
     def id(self):
@@ -127,7 +131,7 @@ class User(object):
         """Returns a generator of tag changes made by the user."""
         url = config.BASE_URL + 'post_tag_history/index.json?' +\
               'user_id='+str(self.id)
-        for tag_change in api._get_data_obj(api._get_page(url)):
+        for tag_change in api._fetch_data(url):
             yield tag_change
 
     @property
@@ -135,5 +139,14 @@ class User(object):
         """Returns a generator of post flags made by the user."""
         url = config.BASE_URL + 'post_flag_history/index.json?' +\
               'user_id='+str(self.id)
-        for flag in api._get_data_obj(api._get_page(url)):
+        for flag in api._fetch_data(url):
             yield flag
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include tag history or flag history.
+
+        :returns: All locally-stored user data.
+        :rtype: dict
+        """
+        return self._data

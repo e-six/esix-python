@@ -21,7 +21,7 @@ def search(title='', limit=5):
     page = 1
     end = False
     while not end:
-        rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+        rs = api._fetch_data(url+'&page='+str(page))
         result += len(rs)
         for pool_data in rs:
             yield Pool(pool_data=pool_data)
@@ -38,7 +38,7 @@ def recent():
     :rtype: generator object
     """
     url = config.BASE_URL + 'pool/index.json'
-    for pool_data in api._get_data_obj(api._get_page(url)):
+    for pool_data in api._fetch_data(url):
         yield Pool(pool_data=pool_data)
 
 
@@ -50,21 +50,24 @@ class Pool(object):
         :type pool_id: int
         :param pool_data: Raw data to load directly into the object.
         :type pool_data: dict
+        :raises: errors.PoolNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'user_id', 'created_at',
                      'updated_at', 'post_count', 'is_public',
                      'is_active', 'description']:
             self._data[prop] = None
-        if pool_id is None and pool_data is None: return
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
-            try: pool_data = api._get_data_obj(api._get_page(url+'&page=999'))
-            except errors.APIGetError:
+            try:
+                data = api._fetch_data(url+'&page=999')
+                for prop in data: self._data[prop] = data[prop]
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
-            if 'posts' in pool_data: del(pool_data['posts'])
-        for prop in pool_data: self._data[prop] = pool_data[prop]
+            if 'posts' in data: del(data['posts'])
+        if pool_data is not None:
+            for prop in pool_data: self._data[prop] = pool_data[prop]
 
     @property
     def id(self):
@@ -151,11 +154,22 @@ class Pool(object):
         page = 1
         end = False
         while not end:
-            try: rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
-            except errors.APIGetError: return None
+            try: rs = api._fetch_data(url+'&page='+str(page))
+            except (errors.APIGetError, errors.JSONError):
+                yield None
+                return
             for post_data in rs['posts']:
                 yield post.Post(post_data=post_data)
             if rs is None or len(rs['posts']) == 0:
                 end = True
                 break
             page += 1
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include the list of posts.
+
+        :returns: All locally-stored pool data.
+        :rtype: dict
+        """
+        return self._data

@@ -6,6 +6,7 @@ __pycache__/
 build/
 dist/
 esix.egg-info/
+wiki/
 
 # Ignore Python binaries and other stuff
 install_files.txt
@@ -13,3 +14,4 @@ install_files.txt
 *.sublime-project
 *.sublime-workspace
 /test.py
+/install.sh

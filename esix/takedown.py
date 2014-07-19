@@ -14,6 +14,7 @@ class Takedown(object):
         :type takedown_id: int
         :param takedown_data: Raw data to load directly into the object.
         :type takedown_data: dict
+        :raises: errors.TakedownNotFoundError
         """
         self._data = {}
         for prop in ['id', 'source', 'posts', 'status', 'email',
@@ -21,17 +22,18 @@ class Takedown(object):
                      'notes', 'approver', 'vericode',
                      'ip_addr', 'hidereason', 'delposts']:
             self._data[prop] = None
-        if takedown_id is None and takedown_data is None: return
         if takedown_id is not None:
             try:
-                takedown_data = api._get_data_obj(api._get_page(
+                data = api._fetch_data(
                     config.BASE_URL + '/takedown/show.json?id=' + \
                     str(takedown_id)
-                ))
+                )
+                for prop in data: self._data[prop] = data[prop]
             except errors.JSONError:
                 raise errors.TakedownNotFoundError('The requested takedown ' +\
                     'could not be found.')
-        for prop in takedown_data: self._data[prop] = takedown_data[prop]
+        if takedown_data is not None:
+            for prop in takedown_data: self._data[prop] = takedown_data[prop]
 
     @property
     def id(self):
@@ -147,3 +149,11 @@ class Takedown(object):
     @posts.setter
     def posts(self, value):
         self._data['posts'] = value
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+
+        :returns: All locally-stored takedown data.
+        :rtype: dict
+        """
+        return self._data

@@ -13,8 +13,24 @@ def recent():
     :rtype: generator object
     """
     url = config.BASE_URL + 'comment/index.json'
-    for comment_data in api._get_data_obj(api._get_page(url)):
+    for comment_data in api._fetch_data(url):
         yield Comment(comment_data=comment_data)
+
+def submit(post_id, body):
+    """Create and submit a comment on a post.
+
+    :param post_id: The ID number of the post to comment on.
+    :type post_id: int
+    :param body: The comment body.
+    :type body: str
+    :returns: The JSON result of the comment submit request
+    :rtype: dict
+    """
+    comment = Comment(comment_data = {
+        'post_id': post_id,
+        'body': body
+        })
+    return comment.submit()
 
 
 class Comment(object):
@@ -25,28 +41,22 @@ class Comment(object):
         :type comment_id: int
         :param comment_data: Raw comment data, for loading directly into object.
         :type comment_data: dict
+        :raises: errors.CommentNotFoundError
         """
         self._data = {}
         for prop in ['creator', 'post_id', 'created_at', 'id',
                      'body', 'score', 'creator_id']:
             self._data[prop] = None
-        if comment_id is None and comment_data is None: return
         if comment_id is not None:
-            if not config.USERNAME and not config.PASSWORD:
-                raise errors.APIUnauthorizedError('You must be logged in to ' +\
-                                                  'find a comment by ID.')
             try:
-                comment_data = api._get_data_obj(api._post_data(
-                    {
-                        'id':str(comment_id),
-                        'login':str(config.USERNAME),
-                        'password_hash':str(config.PASSWORD)
-                    },
+                data = api._get_data_obj(api._post_data({'id':str(comment_id)},
                     config.BASE_URL + 'comment/show.json'))
-            except:
+                for prop in data: self._data[prop] = data[prop]
+            except (errors.APIPostError, errors.JSONError):
                 raise errors.CommentNotFoundError('The requested comment ' +\
                     'could not be found.')
-        for prop in comment_data: self._data[prop] = comment_data[prop]
+        if comment_data is not None:
+            for prop in comment_data: self._data[prop] = comment_data[prop]
 
     @property
     def id(self):
@@ -109,13 +119,24 @@ class Comment(object):
 
         :returns: Whether the post was successful.
         :rtype: bool
+        :raises: errors.APIUnauthorizedError
         """
-        raise errors.APIException('Function not ready. Need to test.')
+        if not config.USERNAME and not config.PASSWORD:
+            raise errors.APIUnauthorizedError('You must be logged in to ' +\
+                'post a comment.')
         data = {
-            'post_id':str(self.id),
-            'comment':str(self.body),
+            'comment[post_id]':str(self.post_id),
+            'comment[body]':str(self.body),
             'login':str(config.USERNAME),
             'password_hash':str(config.PASSWORD)
         }
         return api._get_data_obj(
-            api._post_data(data,config.BASE_URL+'comment/create.json'))
+            api._post_data(data, config.BASE_URL + 'comment/create.json'))
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+
+        :returns: All locally-stored comment data.
+        :rtype: dict
+        """
+        return self._data

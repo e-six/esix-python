@@ -4,25 +4,10 @@ Standard functions for e621's JSON API.
 """
 
 import json
-import urllib.request
+import requests
 
 from . import config, errors
 
-
-def _get_data_obj(page):
-    """Parse a JSON-structured HTTPResponse into a Python object.
-
-    :param page: The JSON URL to fetch.
-    :type page: HTTPResponse
-    :returns: The decoded JSON object, or None if an error occured.
-    :rtype: dict or list or None
-    """
-    data = None
-    try: data = json.loads(page.read().decode('utf-8'))
-    except (ValueError, AttributeError): pass
-    if data is None:
-        raise errors.JSONError('The supplied page data is not JSON-decodable.')
-    return data
 
 def _get_page(url):
     """Fetch the content from a given web URL.
@@ -30,15 +15,12 @@ def _get_page(url):
     :param url: The URL to fetch.
     :type url: str
     :returns: Content retrieved from URL, or None if an error occured.
-    :rtype: HTTPResponse or None
+    :rtype: HTTPResponse
+    :raises: errors.APIGetError
     """
-    try:
-        req = urllib.request.Request(url,
-                                     headers={'User-Agent':config.USER_AGENT})
-        page = urllib.request.urlopen(req)
-    except (urllib.error.HTTPError, ValueError, urllib.error.URLError):
-        page = None
-    if page is None: raise errors.APIGetError('Unable to open URL: '+str(url))
+    try: req = requests.get(url, headers={'User-Agent':config.USER_AGENT})
+    except Exception as e: raise errors.APIGetError(str(e))
+    page = req.text
     return page
 
 def _post_data(data, url):
@@ -49,19 +31,37 @@ def _post_data(data, url):
     :param url: The URL to post to.
     :type url: str
     :returns: Content of the response, or None if an error occured.
-    :rtype: HTTPResponse or None
+    :rtype: HTTPResponse
+    :raises: errors.APIPostError
     """
     err = None
     try:
-        data = urllib.parse.urlencode(data)
-        data = data.encode('utf-8')
-    except TypeError as e: err = e
-    if err: raise errors.APIPostError('The data object is not URL-encodable.')
-    try:
-        req = urllib.request.Request(url,
-                                     headers={'User-Agent':config.USER_AGENT})
-        result = urllib.request.urlopen(req,data)
-    except (urllib.error.HTTPError, ValueError, urllib.error.URLError) as e:
-        err = e
-    if err: raise errors.APIPostError(str(err))
+        req = requests.post(url, data=data, 
+            headers={'User-Agent':config.USER_AGENT})
+    except Exception as e: raise errors.APIPostError(str(e))
+    result = req.text
     return result
+
+def _get_data_obj(page):
+    """Parse a JSON-structured HTTPResponse into a Python object.
+
+    :param page: The JSON-encoded page content to fetch.
+    :type page: HTTPResponse
+    :returns: The decoded JSON object.
+    :rtype: dict or list
+    :raises: errors.JSONError
+    """
+    try: data = json.loads(page)
+    except (ValueError, AttributeError):
+        raise errors.JSONError('The supplied page data is not JSON-decodable.')
+    return data
+
+def _fetch_data(url):
+	"""Fetches a URL's page content, then converts it into a JSON object.
+
+	:param url: The URL of the JSON-encoded page.
+	:type url: str
+	:returns: The decoded JSON object.
+	:rtype: dict
+	"""
+	return _get_data_obj(_get_page(url))

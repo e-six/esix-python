@@ -3,10 +3,15 @@
 Post class for the e621 API.
 """
 
+import hashlib
+import json
+import os
+import shutil
+
 from . import api, config, errors, comment, user
 
 
-def recent_posts(limit=75):
+def recent(limit=75):
     """Fetch the most recent posts from the site.
 
     :param limit: The number of posts to fetch, up to 100. Default 75.
@@ -15,7 +20,7 @@ def recent_posts(limit=75):
     :rtype: generator object
     """
     url = config.BASE_URL + 'post/index.json?limit=' + str(limit)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def search(query, limit=75):
@@ -37,7 +42,7 @@ def search(query, limit=75):
     page = 1
     end = False
     while not end:
-        rs = api._get_data_obj(api._get_page(url+'&page='+str(page)))
+        rs = api._fetch_data(url+'&page='+str(page))
         result += len(rs)
         for post_data in rs:
             yield Post(post_data=post_data)
@@ -61,7 +66,7 @@ def popular_by_day(year=None, month=None, day=None):
     url = config.BASE_URL + 'post/popular_by_day.json'
     if day and month and year:
         url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def popular_by_week(year=None, month=None, day=None):
@@ -79,7 +84,7 @@ def popular_by_week(year=None, month=None, day=None):
     url = config.BASE_URL + 'post/popular_by_week.json'
     if day and month and year:
         url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
 def popular_by_month(year=None, month=None):
@@ -95,8 +100,30 @@ def popular_by_month(year=None, month=None):
     url = config.BASE_URL + 'post/popular_by_month.json'
     if month and year:
         url += '?month='+str(month)+'&year='+str(year)
-    for post_data in api._get_data_obj(api._get_page(url)):
+    for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
+
+def from_file(folder, filename):
+    """Generate a Post object based on locally-stored information for a file.
+
+    :param folder: The folder the image is stored in.
+    :type folder: str
+    :param filename: The name of the file to load
+    :type filename: str
+    :returns: A Post object based on the file.
+    :rtype: post.Post object
+    :raises: errors.BadPostError
+    """
+    if folder != "./" and not folder.endswith("/"): folder += "/"
+    try:
+        with open(folder + filename, 'rb') as f:
+            md5 = hashlib.md5(f.read()).hexdigest()
+    except:
+        raise errors.BadPostError("An error occured loading the " +\
+            "specified file's metadata.")
+    try: data = json.load(open(folder + '.metadata/' + md5))
+    except: raise errors.JSONError("An error occured parsing the JSON data.")
+    return Post(post_data=data)
 
 
 class Post(object):
@@ -107,6 +134,7 @@ class Post(object):
         :type post_id: int
         :param post_data: Raw post data to be loaded directly into the object.
         :type post_data: dict
+        :raises: errors.PostNotFoundError
         """
         self._data = {}
         for prop in ['sources', 'file_ext', 'sample_width',
@@ -118,16 +146,16 @@ class Post(object):
                      'created_at', 'change', 'height', 'width',
                      'preview_width', 'creator_id', 'rating']:
             self._data[prop] = None
-        if post_id is None and post_data is None: return
         if post_id is not None:
             try:
-                post_data = api._get_data_obj(api._get_page(
-                    config.BASE_URL + '/post/show.json?id=' + str(post_id)
-                ))
-            except errors.APIGetError:
+                data = api._fetch_data(
+                    config.BASE_URL + '/post/show.json?id=' + str(post_id))
+                for prop in data: self._data[prop] = data[prop]
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')
-        for prop in post_data: self._data[prop] = post_data[prop]
+        if post_data is not None:
+            for prop in post_data: self._data[prop] = post_data[prop]
 
     @property
     def id(self):
@@ -357,8 +385,8 @@ class Post(object):
     def favorited_users(self):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
-        except errors.APIGetError: return None
+        try: data = api._fetch_data(url)
+        except (errors.APIGetError, errors.JSONError): return
         for username in data['favorited_users'].split(','):
             yield user.User(username)
 
@@ -367,8 +395,8 @@ class Post(object):
         """Returns a generator of tag changes for this post."""
         url = config.BASE_URL + 'post_tag_history/index.json?post_id=' +\
               str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
-        except errors.APIGetError: return None
+        try: data = api._fetch_data(url)
+        except errors.APIGetError: return
         for tag_change in data:
             yield tag_change
 
@@ -377,33 +405,106 @@ class Post(object):
         """Returns a generator of flags for this post."""
         url = config.BASE_URL + 'post_flag_history/index.json?post_id=' +\
               str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
-        except errors.APIGetError: return None
+        try: data = api._fetch_data(url)
+        except errors.APIGetError: return
         for flag in data: yield flag
 
     @property
     def comments(self):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
-        try: data = api._get_data_obj(api._get_page(url))
-        except errors.APIGetError: return None
+        try: data = api._fetch_data(url)
+        except errors.APIGetError: return
         for comment_data in list(reversed(data)):
             yield comment.Comment(comment_data=comment_data)
 
-    def vote_post(self, vote):
+    def vote(self, vote):
         """Upvote or downvote the post.
 
         :param vote: 1 for an upvote, -1 for a downvote.
         :type vote: int
         :returns: Whether the vote was successful.
         :rtype: bool
+        :raises: errors.APIException
         """
-        raise errors.APIException('Not ready. Unordered Collection error.')
         if str(vote) != '1' and str(vote) != '-1': return False
+        if not config.USERNAME and not config.PASSWORD:
+            raise errors.APIUnauthorizedError('You must be logged in to ' +\
+                'vote on posts.')
         data = {
             'id':str(self.id),
-            'score':str(vote)
+            'score':str(vote),
+            'login':str(config.USERNAME),
+            'password_hash':str(config.PASSWORD)
         }
         send_vote = api._get_data_obj(
             api._post_data(data,config.BASE_URL+'post/vote.json'))
         return send_vote
+
+    def dump_data(self):
+        """Returns a dict of all data stored locally for this object.
+        This does not include favorited users, tag history, flag history
+        or comments.
+
+        :returns: All locally-stored post data.
+        :rtype: dict
+        """
+        return self._data
+
+    def download_metadata(self, folder, comments=False):
+        """Save the post's information locally.
+
+        :param folder: The folder in which metadata will be stored
+            (in a .metadata/ subfolder)
+        :type folder: str
+        :param comments: Whether or not the post's comments should be stored.
+        :type comments: bool
+        :returns: Whether or not the operation was successful.
+        :rtype: bool
+        """
+        if folder != './' and not folder.endswith('/'): folder += '/'
+        if not os.path.exists(folder): os.makedirs(folder)
+        data = self._data
+        data['comments'] = []
+        if comments:
+            for c in self.comments: data['comments'].append(c.dump_data())
+        try:
+            with open(folder + self.md5, 'w') as meta_file:
+                meta_file.write(json.dumps(data))
+            return True
+        except: return False
+
+    def download(self, dest='./', name_format="{md5}.{file_ext}", 
+        overwrite=False, write_metadata=False):
+        """Downloads the post object as an image.
+
+        :param dest: The folder to download to. Default is script directory.
+        :type dest: str
+        :param name_format: The format of the filename, post data keywords
+            should be surrounded by {}. Default {md5}.{file_ext}
+        :type name_format: str
+        :param overwrite: If True, will overwrite existing files with the
+            same name. Default False.
+        :type overwrite: bool
+        :returns: Whether or not the download succeeded.
+        :rtype: bool
+        :raises: errors.BadPostError, errors.FileDownloadError
+        """
+        name_format = name_format.replace("{","%(").replace("}",")s")
+        if dest != './' and not dest.endswith('/'): dest += '/'
+        if self.file_url is None:
+            raise errors.BadPostError('No file URL found.')
+        filename = name_format % self._data
+        if not filename.endswith("." + self.file_ext):
+            filename += "." + self.file_ext
+        file = api._get_page(self.file_url)
+        if file and (not os.path.isfile(dest + filename) or overwrite):
+            if 'text/html' in file.headers.get('Content-Type'):
+                raise errors.FileDownloadError('An error occured attempting ' +\
+                    'to download the image.')
+            if not os.path.isdir(dest): os.makedirs(dest)
+            with open(dest+filename,'wb') as out_file:
+                shutil.copyfileobj(file,out_file)
+            if write_metadata: self.downlaod_metadata(dest + '.metadata/')
+            return True
+        return False

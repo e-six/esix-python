@@ -3,10 +3,11 @@
 Demo script showing examples of the library's functionality.
 """
 import esix
+import getpass
 
 # Enter your credentials here
-USERNAME = 'your_username'
-PASSWORD = 'your_password'
+USERNAME = input('Username: ')
+PASSWORD = getpass.getpass()
 
 # Login and save our user object
 try:
@@ -20,7 +21,7 @@ else:
 
 # Show us a list of the 10 most recent post IDs and their uploaders
 print('10 most recent posts:')
-for p in esix.post.recent_posts(limit=10):
+for p in esix.post.recent(limit=10):
     print('#' + str(p.id) + ' by ' + p.author)
 print()
 
