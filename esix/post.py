@@ -122,8 +122,7 @@ def from_file(folder, filename):
         raise errors.BadPostError("An error occured loading the " +\
             "specified file's metadata.")
     try: data = json.load(open(folder + '.metadata/' + md5))
-    except:
-        raise errors.JSONError("An error occured parsing the JSON data.")
+    except: raise errors.JSONError("An error occured parsing the JSON data.")
     return Post(post_data=data)
 
 
