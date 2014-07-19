@@ -36,7 +36,7 @@ class Post(object):
             try:
                 data = api._fetch_data(url)
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'post could not be found.')
         if post_data is not None:
@@ -120,7 +120,7 @@ class Thread(object):
             # Get OP data
             url = config.BASE_URL + 'forum/show.json?id='+str(thread_id)
             try: self._op = Post(thread_id)
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'thread could not be found.')
             # Get replies data
