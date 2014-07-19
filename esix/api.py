@@ -49,7 +49,7 @@ def _get_data_obj(page):
     :rtype: dict or list
     :raises: errors.JSONError
     """
-    try: data = json.loads(page)
+    try: data = json.loads(page.text)
     except (ValueError, AttributeError):
         raise errors.JSONError('The supplied page data is not JSON-decodable.')
     return data
