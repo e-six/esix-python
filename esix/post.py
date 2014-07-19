@@ -6,7 +6,6 @@ Post class for the e621 API.
 import hashlib
 import json
 import os
-import shutil
 
 from . import api, config, errors, comment, user
 
@@ -504,12 +503,15 @@ class Post(object):
             filename += "." + self.file_ext
         file = api._get_page(self.file_url)
         if file and (not os.path.isfile(dest + filename) or overwrite):
-            if 'text/html' in file.headers.get('Content-Type'):
+            if file.headers['Content-Type'].lower() == 'text/html':
                 raise errors.FileDownloadError('An error occured attempting ' +\
                     'to download the image.')
             if not os.path.isdir(dest): os.makedirs(dest)
             with open(dest+filename,'wb') as out_file:
-                shutil.copyfileobj(file,out_file)
+                for chunk in file.iter_content(chunk_size=1024):
+                    if chunk:
+                        out_file.write(chunk)
+                        out_file.flush()
             if write_metadata: self.downlaod_metadata(dest + '.metadata/')
             return True
         return False
