@@ -49,12 +49,7 @@ class Comment(object):
             self._data[prop] = None
         if comment_id is not None:
             try:
-                data = api._get_data_obj(api._post_data(
-                    {
-                        'id':str(comment_id),
-                        'login':str(config.USERNAME),
-                        'password_hash':str(config.PASSWORD)
-                    },
+                data = api._get_data_obj(api._post_data({'id':str(comment_id)},
                     config.BASE_URL + 'comment/show.json'))
                 for prop in data: self._data[prop] = data[prop]
             except:
