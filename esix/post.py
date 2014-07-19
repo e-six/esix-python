@@ -380,6 +380,11 @@ class Post(object):
     @preview_height.setter
     def preview_height(self, value):
         self._data['preview_height'] = value
+    
+    @property
+    def post_url(self):
+        """Returns the site URL the post can be found at."""
+        return config.BASE_URL + 'post/show/' + str(self.id)
 
     @property
     def favorited_users(self):
