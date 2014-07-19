@@ -122,8 +122,7 @@ def from_file(folder, filename):
         raise errors.BadPostError("An error occured loading the " +\
             "specified file's metadata.")
     try: data = json.load(open(folder + '.metadata/' + md5))
-    except:
-        raise errors.JSONError("An error occured parsing the JSON data.")
+    except: raise errors.JSONError("An error occured parsing the JSON data.")
     return Post(post_data=data)
 
 
@@ -135,6 +134,7 @@ class Post(object):
         :type post_id: int
         :param post_data: Raw post data to be loaded directly into the object.
         :type post_data: dict
+        :raises: errors.PostNotFoundError
         """
         self._data = {}
         for prop in ['sources', 'file_ext', 'sample_width',
@@ -151,7 +151,7 @@ class Post(object):
                 data = api._fetch_data(
                     config.BASE_URL + '/post/show.json?id=' + str(post_id))
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
                     'not be found.')
         if post_data is not None:
@@ -386,7 +386,7 @@ class Post(object):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
         try: data = api._fetch_data(url)
-        except errors.APIGetError: return
+        except (errors.APIGetError, errors.JSONError): return
         for username in data['favorited_users'].split(','):
             yield user.User(username)
 
@@ -425,12 +425,17 @@ class Post(object):
         :type vote: int
         :returns: Whether the vote was successful.
         :rtype: bool
+        :raises: errors.APIException
         """
-        raise errors.APIException('Not ready. Unordered Collection error.')
         if str(vote) != '1' and str(vote) != '-1': return False
+        if not config.USERNAME and not config.PASSWORD:
+            raise errors.APIUnauthorizedError('You must be logged in to ' +\
+                'vote on posts.')
         data = {
             'id':str(self.id),
-            'score':str(vote)
+            'score':str(vote),
+            'login':str(config.USERNAME),
+            'password_hash':str(config.PASSWORD)
         }
         send_vote = api._get_data_obj(
             api._post_data(data,config.BASE_URL+'post/vote.json'))
@@ -483,6 +488,7 @@ class Post(object):
         :type overwrite: bool
         :returns: Whether or not the download succeeded.
         :rtype: bool
+        :raises: errors.BadPostError, errors.FileDownloadError
         """
         name_format = name_format.replace("{","%(").replace("}",")s")
         if dest != './' and not dest.endswith('/'): dest += '/'

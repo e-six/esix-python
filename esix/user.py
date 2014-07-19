@@ -15,6 +15,7 @@ def login(username, password):
     :type password: str
     :returns: Your user object.
     :rtype: user.User
+    :raises: errors.APILoginError
     """
     result = api._get_data_obj(api._post_data(
         {
@@ -56,6 +57,7 @@ class User(object):
         :type uesr_id: int
         :param user_data: Raw data to be loaded directly into the object.
         :type user_data: dict
+        :raises: errors.UserNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'level', 'created_at',

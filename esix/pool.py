@@ -50,6 +50,7 @@ class Pool(object):
         :type pool_id: int
         :param pool_data: Raw data to load directly into the object.
         :type pool_data: dict
+        :raises: errors.PoolNotFoundError
         """
         self._data = {}
         for prop in ['id', 'name', 'user_id', 'created_at',
@@ -61,10 +62,10 @@ class Pool(object):
             try:
                 data = api._fetch_data(url+'&page=999')
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.PoolNotFoundError('The requested pool could ' +\
                     'not be found.')
-            if 'posts' in pool_data: del(pool_data['posts'])
+            if 'posts' in data: del(data['posts'])
         if pool_data is not None:
             for prop in pool_data: self._data[prop] = pool_data[prop]
 
@@ -154,7 +155,7 @@ class Pool(object):
         end = False
         while not end:
             try: rs = api._fetch_data(url+'&page='+str(page))
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 yield None
                 return
             for post_data in rs['posts']:

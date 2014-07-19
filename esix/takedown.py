@@ -14,6 +14,7 @@ class Takedown(object):
         :type takedown_id: int
         :param takedown_data: Raw data to load directly into the object.
         :type takedown_data: dict
+        :raises: errors.TakedownNotFoundError
         """
         self._data = {}
         for prop in ['id', 'source', 'posts', 'status', 'email',

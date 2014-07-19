@@ -25,6 +25,7 @@ class Post(object):
         :type post_id: int
         :param post_data: Raw data to load directly into the object.
         :type post_data: dict
+        :raises: errors.ForumPostNotFoundError
         """
         self._data = {}
         for prop in ['id',  'creator',  'creator_id',
@@ -35,7 +36,7 @@ class Post(object):
             try:
                 data = api._fetch_data(url)
                 for prop in data: self._data[prop] = data[prop]
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'post could not be found.')
         if post_data is not None:
@@ -111,6 +112,7 @@ class Thread(object):
         :type thread_id: int
         :param thread_data: Raw data to load directly into the object.
         :type thread_data: dict
+        :raises: errors.ForumPostNotFoundError
         """
         self._op = None
         self._replies = None
@@ -118,7 +120,7 @@ class Thread(object):
             # Get OP data
             url = config.BASE_URL + 'forum/show.json?id='+str(thread_id)
             try: self._op = Post(thread_id)
-            except errors.APIGetError:
+            except (errors.APIGetError, errors.JSONError):
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
                     'thread could not be found.')
             # Get replies data
@@ -132,14 +134,19 @@ class Thread(object):
                 self._replies = list(reversed(self._replies))
 
     def _load_replies(self):
+        """Load all replies to this thread into a list"""
         url = config.BASE_URL + 'forum/index.json?parent_id=' + str(self.id)
-        replies = api._fetch_data(url)
         self._replies = []
-        for post_data in replies:
-            self._replies.append(Post(post_data=post_data))
+        page = 1
+        end = False
+        while not end:
+            rs = api._fetch_data(url+'&page='+str(page))
+            for post_data in rs: self._replies.append(Post(post_data=post_data))
+            if rs is None or len(rs) == 0:
+                end = True
+                break
+            page += 1
         self._replies = list(reversed(self._replies))
-        # TODO only currently loads last 100 replies.
-        # Use url+'&page=#' to fetch more replies
 
     @property
     def id(self):
