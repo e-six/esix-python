@@ -6,6 +6,7 @@ __pycache__/
 build/
 dist/
 esix.egg-info/
+tests/
 wiki/
 
 # Ignore Python binaries and other stuff
