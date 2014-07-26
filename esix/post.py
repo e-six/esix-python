@@ -507,6 +507,6 @@ class Post(object):
                     if chunk:
                         out_file.write(chunk)
                         out_file.flush()
-            if write_metadata: self.downlaod_metadata(dest + '.metadata/')
+            if write_metadata: self.download_metadata(dest + '.metadata/')
             return True
         return False
