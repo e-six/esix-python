@@ -150,6 +150,11 @@ class Takedown(object):
     def posts(self, value):
         self._data['posts'] = value
 
+    @property
+    def post_url(self):
+        """Returns the site URL the takedown can be found at."""
+        return config.BASE_URL + 'takedown/show/' + str(self.id)
+
     def dump_data(self):
         """Returns a dict of all data stored locally for this object.
 

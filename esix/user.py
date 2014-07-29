@@ -127,6 +127,11 @@ class User(object):
         self._data['subscriptions'] = value
 
     @property
+    def profile_url(self):
+        """Returns the site URL the user's profile can be found at."""
+        return config.BASE_URL + 'user/show/' + str(self.id)
+
+    @property
     def tag_history(self):
         """Returns a generator of tag changes made by the user."""
         url = config.BASE_URL + 'post_tag_history/index.json?' +\

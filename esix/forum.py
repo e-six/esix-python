@@ -95,6 +95,11 @@ class Post(object):
         """Returns an object for the post's parent thread."""
         return Thread(self.parent_id)
 
+    @property
+    def post_url(self):
+        """Returns the site URL the forum post can be found at."""
+        return config.BASE_URL + 'forum/show/' + str(self.id)
+
     def dump_data(self):
         """Returns a dict of all data stored locally for this object.
 
@@ -193,6 +198,11 @@ class Thread(object):
         """Return the number of replies the thread has (excluding the OP)."""
         if self._replies is None: self._load_replies()
         return len(self._replies)
+
+    @property
+    def thread_url(self):
+        """Returns the site URL the forum thread can be found at."""
+        return config.BASE_URL + 'forum/show/' + str(self.id)
     
     @property
     def replies(self):
