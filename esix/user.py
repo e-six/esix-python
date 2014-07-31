@@ -127,7 +127,7 @@ class User(object):
         self._data['subscriptions'] = value
 
     @property
-    def profile_url(self):
+    def url(self):
         """Returns the site URL the user's profile can be found at."""
         return config.BASE_URL + 'user/show/' + str(self.id)
 

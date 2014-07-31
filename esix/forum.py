@@ -96,7 +96,7 @@ class Post(object):
         return Thread(self.parent_id)
 
     @property
-    def post_url(self):
+    def url(self):
         """Returns the site URL the forum post can be found at."""
         return config.BASE_URL + 'forum/show/' + str(self.id)
 
@@ -200,7 +200,7 @@ class Thread(object):
         return len(self._replies)
 
     @property
-    def thread_url(self):
+    def url(self):
         """Returns the site URL the forum thread can be found at."""
         return config.BASE_URL + 'forum/show/' + str(self.id)
     

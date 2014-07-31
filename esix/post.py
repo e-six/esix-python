@@ -381,7 +381,7 @@ class Post(object):
         self._data['preview_height'] = value
     
     @property
-    def post_url(self):
+    def url(self):
         """Returns the site URL the post can be found at."""
         return config.BASE_URL + 'post/show/' + str(self.id)
 

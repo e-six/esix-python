@@ -148,7 +148,7 @@ class Pool(object):
         self._data['description'] = value
 
     @property
-    def pool_url(self):
+    def url(self):
         """Returns the site URL the pool can be found at."""
         return config.BASE_URL + 'pool/show/' + str(self.id)
 

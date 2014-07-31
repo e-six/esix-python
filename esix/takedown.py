@@ -151,7 +151,7 @@ class Takedown(object):
         self._data['posts'] = value
 
     @property
-    def post_url(self):
+    def url(self):
         """Returns the site URL the takedown can be found at."""
         return config.BASE_URL + 'takedown/show/' + str(self.id)
 

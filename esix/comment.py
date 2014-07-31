@@ -115,7 +115,7 @@ class Comment(object):
         self._data['score'] = value
 
     @property
-    def comment_url(self):
+    def url(self):
         """Returns the site URL the comment can be found at."""
         return config.BASE_URL + 'comment/show/' + str(self.id)
 
