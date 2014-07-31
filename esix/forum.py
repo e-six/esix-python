@@ -213,7 +213,7 @@ class Thread(object):
         for r in self._replies:
             yield r
 
-    def get_reply(self,index):
+    def get_reply(self, index):
         """Return the given reply by index, None if it does not exist."""
         if index == 0: return self._op
         if self._replies is None: return None
