@@ -60,8 +60,7 @@ class User(object):
         :raises: errors.UserNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'name', 'level', 'created_at',
-                     'blacklisted', 'subscriptions']:
+        for prop in ['id', 'name', 'level', 'created_at', 'subscriptions']:
             self._data[prop] = None
         if user_id is not None:
             try: int(user_id)
@@ -112,11 +111,10 @@ class User(object):
 
     @property
     def blacklisted(self):
-        """Returns a list of tag groups the user has blacklisted."""
-        return self._data['blacklisted']
-    @blacklisted.setter
-    def blacklisted(self, value):
-        self._data['blacklisted'] = value
+        """Returned a list of tag groups the user has blacklisted.
+        Now inactive as the API no longer supports this functionality.
+        """
+        return None
 
     @property
     def subscriptions(self):
