@@ -1,11 +1,14 @@
 # Windows why do you do this
 Thumbs.db
+# OS X you too
+.DS_Store
 
 # Ignore non-source directories
 __pycache__/
 build/
 dist/
-esix.egg-info/
+*.egg-info/
+tests/
 wiki/
 
 # Ignore Python binaries and other stuff

@@ -190,3 +190,4 @@ class FileDownloadError(FileError):
     """
     The requested image could not be downloaded.
     """
+    pass

@@ -148,6 +148,11 @@ class Pool(object):
         self._data['description'] = value
 
     @property
+    def url(self):
+        """Returns the site URL the pool can be found at."""
+        return config.BASE_URL + 'pool/show/' + str(self.id)
+
+    @property
     def posts(self):
         """Returns a generator of Post objects for the pool."""
         url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
