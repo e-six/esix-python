@@ -1,11 +1,11 @@
 # Python Esix #
 
-An easy to use Python 3 frontend for e621.net's JSON API. Currently includes all basic site functionality, from searching posts to getting user information to managing tags.
+An easy to use Python 2/3 frontend for e621.net's JSON API. Currently includes all basic site functionality, from searching posts to getting user information to managing tags.
 
 ----
 ## Setup ##
 ### Dependencies ###
-* [Python 3](https://www.python.org/downloads/)
+* [Python](https://www.python.org/downloads/) - **Update:** Due to the usage of Requests rather than urllib, the library now works with both Python 2 and 3. However it has still only been tested on 3.
 * [Python Requests](http://docs.python-requests.org/en/latest/)
 
 ### Installing ###
