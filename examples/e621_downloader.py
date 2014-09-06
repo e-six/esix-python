@@ -239,15 +239,21 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                     break
         else:
             log_msg(dest,'\tDownloading: '+save_name,True)
-            if post.download(dest,save_name):
+            try:
+                post.download(dest,save_name)
+            except Exception as err:
+                log_msg(dest,'\tError, unable to download post '+str(post.id)+\
+                        ': '+str(err),True)
+                failed.append(post.id)
+            else:
                 downloaded += 1
                 new_md5_list[post.md5] = save_name
-            else:
-                log_msg(dest,
-                        '\tError, unable to download post '+str(post.id),True)
-                failed.append(post.id)
         if write_metadata:
-            if post.download_metadata(dest + '.metadata/', comments=True):
+            try:
+                post.download_metadata(dest + '.metadata/', comments=True)
+            except Exception as err:
+                log_msg(dest,'\tError writing metadata: '+str(err),True)
+            else:
                 log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
     with open(dest+FILE_MD5_DATA,'w') as data_file:
         data_file.write(json.dumps(new_md5_list))
@@ -263,7 +269,9 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                     extras.append(img)
                     log_msg(dest,"File "+img+" found in folder and on site, "+\
                             "but not in requested search.")
-                    srch[0].download_metadata(dest+'.metadata/', comments=True)
+                    try:
+                        srch[0].download_metadata(dest+'.metadata/',
+                                                  comments=True)
                     if copy_extras: copy_file(dest+img,dest+'!extra/onsite/')
                 else:
                     notfound.append(img)
