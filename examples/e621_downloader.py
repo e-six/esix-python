@@ -9,8 +9,8 @@ import shutil
 
 
 __NAME__ = 'e621 Downloader'
-__VERSION__ = '0.71'
-__UPDATED__ = '2014-07-13'
+__VERSION__ = '0.8'
+__UPDATED__ = '2014-09-06'
 
 FILE_MD5_DATA = '.md5data'
 FILE_DOWNLOAD_LOG = 'download-log.txt'
