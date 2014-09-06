@@ -11,18 +11,18 @@ from . import config, errors
 
 
 def RateLimited(max_per_second):
-    min_interval = 1.0 / float(max_per_second)
+    min_interval = 1.0/float(max_per_second)
     def decorate(func):
         last_called = [0.0]
-        def func(*args,**kargs):
-            elapsed = time.clock() - last_called[0]
-            remaining = min_interval - elapsed
-            if remaining>0:
+        def limited_func(*args,**kargs):
+            elapsed = time.clock()-last_called[0]
+            remaining = min_interval-elapsed
+            if remaining > 0:
                 time.sleep(remaining)
             ret = func(*args,**kargs)
             last_called[0] = time.clock()
             return ret
-        return func
+        return limited_func
     return decorate
 
 @RateLimited(2)
