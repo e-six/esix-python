@@ -272,6 +272,7 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                     try:
                         srch[0].download_metadata(dest+'.metadata/',
                                                   comments=True)
+                    except: pass
                     if copy_extras: copy_file(dest+img,dest+'!extra/onsite/')
                 else:
                     notfound.append(img)
