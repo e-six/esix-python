@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from esix import esix
+import esix
 import hashlib
 import json
 import os
