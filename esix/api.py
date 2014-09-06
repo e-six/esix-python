@@ -5,10 +5,27 @@ Standard functions for e621's JSON API.
 
 import json
 import requests
+import time
 
 from . import config, errors
 
 
+def RateLimited(max_per_second):
+    min_interval = 1.0 / float(max_per_second)
+    def decorate(func):
+        last_called = [0.0]
+        def func(*args,**kargs):
+            elapsed = time.clock() - last_called[0]
+            remaining = min_interval - elapsed
+            if remaining>0:
+                time.sleep(remaining)
+            ret = func(*args,**kargs)
+            last_called[0] = time.clock()
+            return ret
+        return func
+    return decorate
+
+@RateLimited(2)
 def _get_page(url):
     """Fetch the content from a given web URL.
 
@@ -22,6 +39,7 @@ def _get_page(url):
     except Exception as e: raise errors.APIGetError(str(e))
     return req
 
+@RateLimited(2)
 def _post_data(data, url):
     """Post the given data object to the given URL.
 
