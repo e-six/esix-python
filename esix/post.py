@@ -41,7 +41,7 @@ def search(query, limit=75):
     page = 1
     end = False
     while not end:
-        rs = api._fetch_data(url+'&page='+str(page))
+        rs = api._fetch_data(url + '&page=' + str(page))
         result += len(rs)
         for post_data in rs:
             yield Post(post_data=post_data)
@@ -64,7 +64,8 @@ def popular_by_day(year=None, month=None, day=None):
     """
     url = config.BASE_URL + 'post/popular_by_day.json'
     if day and month and year:
-        url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
+        url += '?day=' + str(day) + '&month=' + str(month) +\
+            '&year=' + str(year)
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
@@ -82,7 +83,8 @@ def popular_by_week(year=None, month=None, day=None):
     """
     url = config.BASE_URL + 'post/popular_by_week.json'
     if day and month and year:
-        url += '?day='+str(day)+'&month='+str(month)+'&year='+str(year)
+        url += '?day=' + str(day) + '&month=' + str(month) +\
+            '&year=' + str(year)
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
@@ -98,7 +100,7 @@ def popular_by_month(year=None, month=None):
     """
     url = config.BASE_URL + 'post/popular_by_month.json'
     if month and year:
-        url += '?month='+str(month)+'&year='+str(year)
+        url += '?month=' + str(month) + '&year=' + str(year)
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
@@ -442,7 +444,7 @@ class Post(object):
             'password_hash':str(config.PASSWORD)
         }
         send_vote = api._get_data_obj(
-            api._post_data(data,config.BASE_URL+'post/vote.json'))
+            api._post_data(data,config.BASE_URL + 'post/vote.json'))
         return send_vote
 
     def dump_data(self):
@@ -507,7 +509,7 @@ class Post(object):
                 raise errors.FileDownloadError('An error occured attempting ' +\
                     'to download the image.')
             if not os.path.isdir(dest): os.makedirs(dest)
-            with open(dest+filename,'wb') as out_file:
+            with open(dest + filename, 'wb') as out_file:
                 for chunk in file.iter_content(chunk_size=1024):
                     if chunk:
                         out_file.write(chunk)
