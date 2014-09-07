@@ -40,8 +40,10 @@ class Ticket(object):
         :raises: errors.TicketNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'type', 'status', 'user', 'username', 
-                     'created_at', 'updated_at']:
+        for prop in ['id', 'type', 'status', 'user', 'username', 'created_at',
+                     'updated_at', 'desired_username', 'oldname', 'reason',
+                     'reported_comment', 'handled_by', 'handled_by_name',
+                     'reported_forum', 'response']:
             self._data[prop] = None
         if ticket_id is not None:
             try:
