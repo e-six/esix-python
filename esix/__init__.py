@@ -7,7 +7,7 @@ __version__ = "1.2.1"
 __author__ = "Alex Schaeffer"
 __copyright__ = "Copyright (c)2014, " + __author__
 
-__all__ = ["api", "config", "errors", "post", "comment",
-           "user", "tag", "pool", "takedown", "forum"]
+__all__ = ["api", "config", "errors", "post", "comment", "user",
+           "tag", "pool", "takedown", "forum", "ticket"]
 
 from . import *

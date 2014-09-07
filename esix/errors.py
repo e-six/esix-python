@@ -174,6 +174,24 @@ class BadForumPostError(ForumError):
     """
     pass
 
+class TicketError(APIException):
+    """
+    Error trying to retrieve ticket information.
+    """
+    pass
+
+class TicketNotFoundError(TagError):
+    """
+    The requested ticket could not be found.
+    """
+    pass
+
+class BadTicketError(TagError):
+    """
+    A ticket objct is not structured correctly, or data is missing.
+    """
+    pass
+
 class FileError(APIException):
     """
     An error occured during the handling of local files.
