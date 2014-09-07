@@ -19,7 +19,7 @@ def recent(page=1, limit=2):
     result = 0
     end = False
     while not end:
-        rs = api._fetch_data(url + '&page=' + str(page))
+        rs = api._fetch_data(url + '?page=' + str(page))
         result += len(rs)
         for ticket_data in rs:
             yield Ticket(ticket_data=ticket_data)
