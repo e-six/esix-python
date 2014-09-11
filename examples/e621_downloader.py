@@ -160,7 +160,7 @@ def gen_md5_list(folder):
                     md5 = hashlib.md5(file.read()).hexdigest()
                 files[md5] = f
             except: continue
-    data_file.write(json.dumps(files))
+    data_file.write(json.dumps(files,indent=4,sort_keys=True))
     data_file.close()
     return files
 
@@ -250,14 +250,15 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                 new_md5_list[post.md5] = save_name
         if write_metadata:
             try:
-                post.download_metadata(dest + '.metadata/', comments=True)
+                post.download_metadata(dest + '.metadata/',
+                                       comments=True, pretty=True)
             except Exception as err:
                 log_msg(dest,'\tError writing metadata: '+str(err),True)
             else:
                 log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
     if downloaded > 0:
         with open(dest+FILE_MD5_DATA,'w') as data_file:
-            data_file.write(json.dumps(new_md5_list))
+            data_file.write(json.dumps(new_md5_list,indent=4,sort_keys=True))
 
     log_msg(dest,'Done.',True)
     if check_extra and not new_only:
@@ -272,7 +273,7 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                             "but not in requested search.")
                     try:
                         srch[0].download_metadata(dest+'.metadata/',
-                                                  comments=True)
+                                                  comments=True, pretty=True)
                     except: pass
                     if copy_extras: copy_file(dest+img,dest+'!extra/onsite/')
                 else:
