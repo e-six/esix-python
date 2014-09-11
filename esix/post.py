@@ -457,7 +457,7 @@ class Post(object):
         """
         return self._data
 
-    def download_metadata(self, folder, comments=False):
+    def download_metadata(self, folder, comments=False, pretty=False):
         """Save the post's information locally.
 
         :param folder: The folder in which metadata will be stored
@@ -465,6 +465,8 @@ class Post(object):
         :type folder: str
         :param comments: Whether or not the post's comments should be stored.
         :type comments: bool
+        :param pretty: Whether or not to pretty print the data to the file.
+        :type pretty: bool
         :returns: Whether or not the operation was successful.
         :rtype: bool
         """
@@ -476,7 +478,10 @@ class Post(object):
             for c in self.comments: data['comments'].append(c.dump_data())
         try:
             with open(folder + self.md5, 'w') as meta_file:
-                meta_file.write(json.dumps(data))
+                if pretty == True:
+                    meta_file.write(json.dumps(data, indent=4, sort_keys=True))
+                else:
+                    meta_file.write(json.dumps(data))
             return True
         except: return False
 
