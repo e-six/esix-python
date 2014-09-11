@@ -255,8 +255,9 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                 log_msg(dest,'\tError writing metadata: '+str(err),True)
             else:
                 log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
-    with open(dest+FILE_MD5_DATA,'w') as data_file:
-        data_file.write(json.dumps(new_md5_list))
+    if downloaded > 0:
+        with open(dest+FILE_MD5_DATA,'w') as data_file:
+            data_file.write(json.dumps(new_md5_list))
 
     log_msg(dest,'Done.',True)
     if check_extra and not new_only:
