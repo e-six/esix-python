@@ -174,6 +174,7 @@ def get_md5_list(folder):
 
 def copy_file(src,dest):
     if not os.path.isdir(dest): os.makedirs(dest)
+    if not os.path.isfile(src): return
     shutil.copy2(src,dest)
 
 
