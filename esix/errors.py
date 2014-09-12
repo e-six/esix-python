@@ -34,6 +34,12 @@ class APIPostError(APIError):
     """
     pass
 
+class SiteLoadError(APIError):
+    """
+    Error that occurs when the site is under heavy load and cannot return data.
+    """
+    pass
+
 class APILoginError(APIError):
     """
     An error occured attempting to log in. Either the credentials were

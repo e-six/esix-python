@@ -70,7 +70,7 @@ def _get_data_obj(page):
     try: data = json.loads(page.text)
     except (ValueError, AttributeError):
         if 'This website is under heavy load' in page.text:
-            raise errors.APIError('API call failed. ' +\
+            raise errors.SiteLoadError('API call failed. ' +\
                 'The site is under heavy load.')
         raise errors.JSONError('The supplied page data is not JSON-decodable.')
     return data
