@@ -327,6 +327,14 @@ class Post(object):
         self._data['width'] = value
 
     @property
+    def change(self):
+        """Returns the timestamp of the post's last change."""
+        return self._data['change']
+    @change.setter
+    def change(self, value):
+        self._data['change'] = value
+
+    @property
     def height(self):
         """Returns the height of the image."""
         return self._data['height']
