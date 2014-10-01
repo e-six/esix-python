@@ -9,8 +9,8 @@ import shutil
 
 
 __NAME__ = 'e621 Downloader'
-__VERSION__ = '0.8'
-__UPDATED__ = '2014-09-06'
+__VERSION__ = '0.9'
+__UPDATED__ = '2014-10-01'
 
 FILE_MD5_DATA = '.md5data'
 FILE_DOWNLOAD_LOG = 'download-log.txt'
@@ -239,24 +239,40 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                     log_msg(dest,'Ending download...')
                     break
         else:
-            log_msg(dest,'\tDownloading: '+save_name,True)
-            try:
-                post.download(dest,save_name)
-            except Exception as err:
-                log_msg(dest,'\tError, unable to download post '+str(post.id)+\
-                        ': '+str(err),True)
-                failed.append(post.id)
-            else:
-                downloaded += 1
-                new_md5_list[post.md5] = save_name
+            dl_success = False
+            while not dl_success:
+                log_msg(dest,'\tDownloading: '+save_name,True)
+                try:
+                    post.download(dest,save_name)
+                except esix.errors.SiteLoadError as err:
+                    log_msg(dest,'\tError downloading post: '+str(err),True)
+                    print("\tPlease wait a bit and press [Enter] to try again.")
+                    input()
+                except Exception as err:
+                    log_msg(dest,'\tError, unable to download post '+\
+                            str(post.id)+': '+str(err),True)
+                    failed.append(post.id)
+                    break
+                else:
+                    downloaded += 1
+                    dl_success = True
+                    new_md5_list[post.md5] = save_name
         if write_metadata:
-            try:
-                post.download_metadata(dest + '.metadata/',
-                                       comments=True, pretty=True)
-            except Exception as err:
-                log_msg(dest,'\tError writing metadata: '+str(err),True)
-            else:
-                log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
+            dl_success = False
+            while not dl_success:
+                try:
+                    post.download_metadata(dest + '.metadata/',
+                                           comments=True, pretty=True)
+                except esix.errors.SiteLoadError as err:
+                    log_msg(dest,'\tError writing metadata: '+str(err),True)
+                    print("\tPlease wait a bit and press [Enter] to try again.")
+                    input()
+                except Exception as err:
+                    log_msg(dest,'\tError writing metadata: '+str(err),True)
+                    break
+                else:
+                    log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
+                    dl_success = True
     if downloaded > 0:
         with open(dest+FILE_MD5_DATA,'w') as data_file:
             data_file.write(json.dumps(new_md5_list,indent=4,sort_keys=True))
