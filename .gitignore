@@ -10,6 +10,7 @@ dist/
 *.egg-info/
 tests/
 wiki/
+.idea/
 
 # Ignore Python binaries and other stuff
 install_files.txt
