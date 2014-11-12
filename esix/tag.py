@@ -46,8 +46,8 @@ class Tag(object):
             try: int(tag_id)
             except ValueError: id_type = 'name'
             else: id_type = 'id'
-            url = config.BASE_URL + 'tag/index.json?' + id_type +\
-                '=' + str(tag_id)
+            url = config.BASE_URL + 'tag/index.json?' +\
+                id_type + '=' + str(tag_id)
             tag_list = api._fetch_data(url)
             if len(tag_list) == 0:
                 raise errors.TagNotFoundError('The requested tag ' +\

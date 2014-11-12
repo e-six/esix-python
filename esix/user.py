@@ -70,7 +70,7 @@ class User(object):
                 id_type + '=' + str(user_id)
             user_list = api._fetch_data(url)
             if len(user_list) == 0:
-                raise errors.UserNotFoundError('User ' + str(user_id)+\
+                raise errors.UserNotFoundError('User ' + str(user_id) +\
                                                ' not found.')
             else:
                 data = user_list[0]
