@@ -480,7 +480,7 @@ class Post(object):
         data = self._data
         data['comments'] = []
         if comments:
-            for c in self.comments: data['comments'].append(c.dump_data())
+            for c in reversed(self.comments): data['comments'].append(c.dump_data())
         try:
             with open(folder + self.md5, 'w') as meta_file:
                 meta_file.write(json.dumps(data))
