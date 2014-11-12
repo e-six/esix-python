@@ -136,7 +136,6 @@ class Post(object):
         :raises: errors.PostNotFoundError
         """
         self._data = {}
-        self._comments = []
         for prop in ['sources', 'file_ext', 'sample_width',
                      'sample_height', 'children', 'preview_url',
                      'status', 'parent_id', 'md5', 'source', 'id',
@@ -387,11 +386,6 @@ class Post(object):
         return config.BASE_URL + 'post/show/' + str(self.id)
 
     @property
-    def comments(self):
-        """Returns a generator of comments made on this post."""
-        return self._comments
-
-    @property
     def favorited_users(self):
         """Returns a generator of users who favorited this post"""
         url = config.BASE_URL + 'favorite/list_users.json?id=' + str(self.id)
@@ -419,21 +413,23 @@ class Post(object):
         except errors.APIGetError: return
         for flag in data: yield flag
 
-    def fetch_comments(self):
-        """Poll the site for comments made on this post."""
+    @property
+    def comments(self):
+        """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
-        self._comments = []
+        clist = []
         page = 1
         end = False
         while not end:
-            rs = api._fetch_data(url + '&page=' + str(page))
+            try: rs = api._fetch_data(url + '&page=' + str(page))
+            except errors.APIGetError: return
             for comment_data in rs:
-                self._comments.append(comment.Comment(comment_data=comment_data))
+                clist.append(comment.Comment(comment_data=comment_data))
             if rs is None or len(rs) == 0:
                 end = True
                 break
             page += 1
-        self._comments = list(reversed(self._comments))
+        return clist
 
     def vote(self, vote):
         """Upvote or downvote the post.
