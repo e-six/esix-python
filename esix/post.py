@@ -417,13 +417,11 @@ class Post(object):
     def comments(self):
         """Returns a generator of comments made on this post."""
         url = config.BASE_URL + 'comment/index.json?post_id=' + str(self.id)
-        result = 0
         page = 1
         end = False
         while not end:
             try: rs = api._fetch_data(url + '&page=' + str(page))
             except errors.APIGetError: return
-            result += len(rs)
             for comment_data in rs:
                 yield comment.Comment(comment_data=comment_data)
             if rs is None or len(rs) == 0:
@@ -480,7 +478,7 @@ class Post(object):
         data = self._data
         data['comments'] = []
         if comments:
-            for c in self.comments: data['comments'].append(c.dump_data())
+            for c in reversed(list(self.comments)): data['comments'].append(c.dump_data())
         try:
             with open(folder + self.md5, 'w') as meta_file:
                 meta_file.write(json.dumps(data))
