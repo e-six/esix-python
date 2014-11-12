@@ -19,7 +19,7 @@ def all_tags(page=1, limit=2):
     result = 0
     end = False
     while not end:
-        rs = api._fetch_data(url+'&page='+str(page))
+        rs = api._fetch_data(url + '&page=' + str(page))
         result += len(rs)
         for tag_data in rs:
             yield Tag(tag_data=tag_data)
@@ -46,7 +46,8 @@ class Tag(object):
             try: int(tag_id)
             except ValueError: id_type = 'name'
             else: id_type = 'id'
-            url = config.BASE_URL + 'tag/index.json?'+id_type+'='+str(tag_id)
+            url = config.BASE_URL + 'tag/index.json?' +\
+                id_type + '=' + str(tag_id)
             tag_list = api._fetch_data(url)
             if len(tag_list) == 0:
                 raise errors.TagNotFoundError('The requested tag ' +\

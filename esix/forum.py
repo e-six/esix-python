@@ -32,7 +32,7 @@ class Post(object):
                      'parent_id',  'title',    'body']:
             self._data[prop] = None
         if post_id is not None:
-            url = config.BASE_URL + 'forum/show.json?id='+str(post_id)
+            url = config.BASE_URL + 'forum/show.json?id=' + str(post_id)
             try:
                 data = api._fetch_data(url)
                 for prop in data: self._data[prop] = data[prop]
@@ -123,7 +123,7 @@ class Thread(object):
         self._replies = None
         if thread_id is not None:
             # Get OP data
-            url = config.BASE_URL + 'forum/show.json?id='+str(thread_id)
+            url = config.BASE_URL + 'forum/show.json?id=' + str(thread_id)
             try: self._op = Post(thread_id)
             except (errors.APIGetError, errors.JSONError):
                 raise errors.ForumPostNotFoundError('The requested forum ' +\
@@ -145,7 +145,7 @@ class Thread(object):
         page = 1
         end = False
         while not end:
-            rs = api._fetch_data(url+'&page='+str(page))
+            rs = api._fetch_data(url + '&page=' + str(page))
             for post_data in rs: self._replies.append(Post(post_data=post_data))
             if rs is None or len(rs) == 0:
                 end = True

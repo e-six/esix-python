@@ -21,7 +21,7 @@ def search(title='', limit=5):
     page = 1
     end = False
     while not end:
-        rs = api._fetch_data(url+'&page='+str(page))
+        rs = api._fetch_data(url + '&page=' + str(page))
         result += len(rs)
         for pool_data in rs:
             yield Pool(pool_data=pool_data)
@@ -60,7 +60,7 @@ class Pool(object):
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
             try:
-                data = api._fetch_data(url+'&page=999')
+                data = api._fetch_data(url + '&page=999')
                 for prop in data: self._data[prop] = data[prop]
             except (errors.APIGetError, errors.JSONError):
                 raise errors.PoolNotFoundError('The requested pool could ' +\
@@ -159,7 +159,7 @@ class Pool(object):
         page = 1
         end = False
         while not end:
-            try: rs = api._fetch_data(url+'&page='+str(page))
+            try: rs = api._fetch_data(url + '&page=' + str(page))
             except (errors.APIGetError, errors.JSONError):
                 yield None
                 return
