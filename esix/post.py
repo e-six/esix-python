@@ -421,8 +421,7 @@ class Post(object):
         page = 1
         end = False
         while not end:
-            try:
-                rs = api._fetch_data(url + '&page=' + str(page))
+            try: rs = api._fetch_data(url + '&page=' + str(page))
             except errors.APIGetError: return
             result += len(rs)
             for comment_data in rs:
