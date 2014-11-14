@@ -1,0 +1,11 @@
+v1.2.3
+	-Fixed the formatting/order of comments in downloaded metadata
+
+v1.2.2
+	-Allowed all comments to be fetched for a post, rather than the last 25.
+	-Added an example script to download images matching a tag search.
+
+v1.2.0
+	-Added an exception and catch for "This site is under heavy load" errors
+	-Added URL properties to most classes, returns the site URL for the post, comment, etc.
+	-`User.blacklisted` now returns None, as the site admins have disabled viewing that data via the API.
