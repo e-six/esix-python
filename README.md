@@ -5,10 +5,13 @@ An easy to use Python 2/3 frontend for e621.net's JSON API. Currently includes a
 ----
 ## Setup ##
 ### Dependencies ###
-* [Python](https://www.python.org/downloads/) - **Update:** Due to the usage of Requests rather than urllib, the library now works with both Python 2 and 3. However it has still only been tested on 3.
+* [Python](https://www.python.org/downloads/) - **Update:** Due to the usage of Requests rather than urllib, the library now works with both Python 2 and 3. However it has still only been extensively tested on 3.
 * [Python Requests](http://docs.python-requests.org/en/latest/)
 
 ### Installing ###
+#### From PyPI ####
+Esix is available on the Python Package Index. Simply run `pip install esix` to install it. (NOTE: although dependencies should install automatically, if you encounter an error install requests with `pip install requests`)
+#### From Source ####
 Simply run `python setup.py install` from your download directory. The package should automatically install to your Python directory. From there you can `import esix` in any Python script.
 
 ----

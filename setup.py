@@ -12,5 +12,6 @@ setup(name='esix',
       url='https://bitbucket.org/AMV_Ph34r/python-esix',
       author=esix.__author__,
       author_email="AMVPh34r@gmail.com",
+      install_requires=['requests'],
       license='MIT',
       packages=['esix'])
