@@ -6,6 +6,7 @@ v1.3.0
     -Added the "change" property to the Post module, returns the timestamp of the last change to the post.
     -Added an option to pretty-print exported metadata in `Post.download_metadata` for readability.
     -Updated the downloader example script.
+    -NOTE: During testing for this release, all attempts to login through the library received an "Invalid auth token" error. It has not yet been determined if this is an issue with the library or a server-side change, but logins may not work properly for the time being.
 
 v1.2.3
 	-Fixed the formatting/order of comments in downloaded metadata
