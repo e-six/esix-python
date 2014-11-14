@@ -104,25 +104,25 @@ def popular_by_month(year=None, month=None):
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
-def from_file(folder, filename):
+def from_file(dir, filename):
     """Generate a Post object based on locally-stored information for a file.
 
-    :param folder: The folder the image is stored in.
-    :type folder: str
+    :param dir: The directory the image is stored in.
+    :type dir: str
     :param filename: The name of the file to load
     :type filename: str
     :returns: A Post object based on the file.
     :rtype: post.Post object
     :raises: errors.BadPostError
     """
-    if folder != "./" and not folder.endswith("/"): folder += "/"
+    if dir != "./" and not dir.endswith("/"): dir += "/"
     try:
-        with open(folder + filename, 'rb') as f:
+        with open(dir + filename, 'rb') as f:
             md5 = hashlib.md5(f.read()).hexdigest()
     except:
         raise errors.BadPostError("An error occured loading the " +\
             "specified file's metadata.")
-    try: data = json.load(open(folder + '.metadata/' + md5))
+    try: data = json.load(open(dir + '.metadata/' + md5))
     except: raise errors.JSONError("An error occured parsing the JSON data.")
     return Post(post_data=data)
 
@@ -472,12 +472,12 @@ class Post(object):
         """
         return self._data
 
-    def download_metadata(self, folder, comments=False, pretty=False):
+    def download_metadata(self, dest, comments=False, pretty=False):
         """Save the post's information locally.
 
-        :param folder: The folder in which metadata will be stored
-            (in a .metadata/ subfolder)
-        :type folder: str
+        :param dest: The directory in which metadata will be stored
+            (in a .metadata/ subdirectory)
+        :type dest: str
         :param comments: Whether or not the post's comments should be stored.
         :type comments: bool
         :param pretty: Whether or not to pretty print the data to the file.
@@ -485,14 +485,14 @@ class Post(object):
         :returns: Whether or not the operation was successful.
         :rtype: bool
         """
-        if folder != './' and not folder.endswith('/'): folder += '/'
-        if not os.path.exists(folder): os.makedirs(folder)
+        if dest != './' and not dest.endswith('/'): dest += '/'
+        if not os.path.exists(dest): os.makedirs(dest)
         data = self._data
         data['comments'] = []
         if comments:
             for c in reversed(list(self.comments)): data['comments'].append(c.dump_data())
         try:
-            with open(folder + self.md5, 'w') as meta_file:
+            with open(dest + self.md5, 'w') as meta_file:
                 if pretty == True:
                     meta_file.write(json.dumps(data, indent=4, sort_keys=True))
                 else:
@@ -504,7 +504,7 @@ class Post(object):
         overwrite=False, write_metadata=False):
         """Downloads the post object as an image.
 
-        :param dest: The folder to download to. Default is script directory.
+        :param dest: The directory to download to. Default is script directory.
         :type dest: str
         :param name_format: The format of the filename, post data keywords
             should be surrounded by {}. Default {md5}.{file_ext}

@@ -23,9 +23,12 @@ def login(username, password):
             'password':str(password)
         },
         config.BASE_URL + 'user/login.json'))
-    if 'success' in result and result['success'] == 'failed':
-        raise errors.APILoginError('Login failed, '+\
-                                   'incorrect username or password.')
+    if 'success' in result and result['success'] in ('failed', False):
+        if 'reason' in result:
+            raise errors.APILoginError('Login failed: ' + str(result['reason']))
+        else:
+            raise errors.APILoginError('Login failed, '+\
+                                       'incorrect username or password.')
     if not 'password_hash' in result:
         config.USERNAME, config.PASSWORD = ('','')
         raise errors.APILoginError('Login failed, password hash not retrieved.')

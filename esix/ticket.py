@@ -8,7 +8,7 @@ from . import api, config, errors
 def recent(page=1, limit=2):
     """Return a generator of recently created tickets.
 
-    :param page: The page to begin on, assuming 24 tickets per page.
+    :param page: The page to begin on, assuming 50 tickets per page.
     :type page: int
     :param limit: The maximum pages of tickets to return.
     :type limit: int
