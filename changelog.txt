@@ -1,0 +1,21 @@
+v1.3.0
+    -Added the Ticket module, allows viewing user-submitted tickets (regarding username changes, reports, etc).
+    -Added a rate limiter to all API calls to follow the site's API guidelines. Now no more than 2 API calls will be made per second.
+    -Changed the user agent string to represent the library, rather than spoofing Firefox.
+    -Added a new exception for site load errors.
+    -Added the "change" property to the Post module, returns the timestamp of the last change to the post.
+    -Added an option to pretty-print exported metadata in `Post.download_metadata` for readability.
+    -Updated the downloader example script.
+    -NOTE: During testing for this release, all attempts to login through the library received an "Invalid auth token" error. It has not yet been determined if this is an issue with the library or a server-side change, but logins may not work properly for the time being.
+
+v1.2.3
+	-Fixed the formatting/order of comments in downloaded metadata
+
+v1.2.2
+	-Allowed all comments to be fetched for a post, rather than the last 25.
+	-Added an example script to download images matching a tag search.
+
+v1.2.0
+	-Added an exception and catch for "This site is under heavy load" errors
+	-Added URL properties to most classes, returns the site URL for the post, comment, etc.
+	-`User.blacklisted` now returns None, as the site admins have disabled viewing that data via the API.

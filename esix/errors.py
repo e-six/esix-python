@@ -34,6 +34,12 @@ class APIPostError(APIError):
     """
     pass
 
+class SiteLoadError(APIError):
+    """
+    Error that occurs when the site is under heavy load and cannot return data.
+    """
+    pass
+
 class APILoginError(APIError):
     """
     An error occured attempting to log in. Either the credentials were
@@ -171,6 +177,24 @@ class ForumPostNotFoundError(ForumError):
 class BadForumPostError(ForumError):
     """
     A forum post object is not structured correctly, or data is missing.
+    """
+    pass
+
+class TicketError(APIException):
+    """
+    Error trying to retrieve ticket information.
+    """
+    pass
+
+class TicketNotFoundError(TagError):
+    """
+    The requested ticket could not be found.
+    """
+    pass
+
+class BadTicketError(TagError):
+    """
+    A ticket objct is not structured correctly, or data is missing.
     """
     pass
 
