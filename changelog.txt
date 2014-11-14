@@ -1,3 +1,12 @@
+v1.3.0
+    -Added the Ticket module, allows viewing user-submitted tickets (regarding username changes, reports, etc).
+    -Added a rate limiter to all API calls to follow the site's API guidelines. Now no more than 2 API calls will be made per second.
+    -Changed the user agent string to represent the library, rather than spoofing Firefox.
+    -Added a new exception for site load errors.
+    -Added the "change" property to the Post module, returns the timestamp of the last change to the post.
+    -Added an option to pretty-print exported metadata in `Post.download_metadata` for readability.
+    -Updated the downloader example script.
+
 v1.2.3
 	-Fixed the formatting/order of comments in downloaded metadata
 
