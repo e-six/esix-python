@@ -11,6 +11,6 @@ setup(name='esix',
       description='High level frontend for the e621 JSON API.',
       url='https://bitbucket.org/AMV_Ph34r/python-esix',
       author=esix.__author__,
-      author_email='',
+      author_email="AMVPh34r@gmail.com",
       license='MIT',
       packages=['esix'])
