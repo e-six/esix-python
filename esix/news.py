@@ -9,7 +9,7 @@ from . import api, config, errors, user
 def recent(page=1, limit=1):
     """Return a generator of recently posted news.
 
-    :param page: The page to begin on
+    :param page: The page to begin on, assuming 60 posts per page.
     :type page: int
     :param limit: The maximum pages of posts to return.
     :type limit: int
