@@ -6,6 +6,29 @@ News class for the e621 API.
 from . import api, config, errors, user
 
 
+def recent(page=1, limit=1):
+    """Return a generator of recently posted news.
+
+    :param page: The page to begin on
+    :type page: int
+    :param limit: The maximum pages of posts to return.
+    :type limit: int
+    :returns: A generator of News objects matching the query.
+    :rtype: generator object
+    """
+    url = config.BASE_URL + 'news/index.json'
+    result = 0
+    end = False
+    while not end:
+        rs = api._fetch_data(url + '?page=' + str(page))
+        result += len(rs)
+        for news_data in rs:
+            yield News(news_data=news_data)
+        if rs is None or len(rs) == 0 or (limit and result > limit*50):
+            end = True
+            break
+        page += 1
+
 class News(object):
     def __init__(self, news_data=None):
         """Create an instance of a news post.
