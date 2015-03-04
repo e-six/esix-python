@@ -4,8 +4,9 @@ High level frontend for the e621 JSON API.
 """
 
 __version__ = "1.3.0"
+__build__ = "20150304"
 __author__ = "Alex Schaeffer"
-__copyright__ = "Copyright (c)2014, " + __author__
+__copyright__ = "Copyright (c)2014-2015, " + __author__
 
 __all__ = ["api", "config", "errors", "post", "comment", "user",
            "tag", "pool", "takedown", "forum", "ticket", "news"]

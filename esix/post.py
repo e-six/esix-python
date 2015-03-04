@@ -145,7 +145,7 @@ class Post(object):
                      'description', 'has_notes', 'has_children',
                      'sample_url', 'tags', 'has_comments', 'file_size',
                      'created_at', 'change', 'height', 'width',
-                     'preview_width', 'creator_id', 'rating']:
+                     'preview_width', 'creator_id', 'rating', 'artist']:
             self._data[prop] = None
         if post_id is not None:
             try:
@@ -197,6 +197,14 @@ class Post(object):
     @status.setter
     def status(self, value):
         self._data['status'] = value
+
+    @property
+    def artist(self):
+        """Returns an array of artist tags applied to the post."""
+        return self._data['artist']
+    @artist.setter
+    def artist(self, value):
+        self._data['artist'] = value
 
     @property
     def source(self):
