@@ -139,12 +139,13 @@ class Post(object):
         """
         self._data = {}
         for prop in ['artist', 'author', 'change', 'children',
-                     'created_at', 'creator_id', 'description', 'file_ext',
-                     'file_size', 'file_url', 'has_children', 'has_comments',
-                     'has_notes', 'height', 'id', 'md5', 'parent_id',
-                     'preview_height', 'preview_url', 'preview_width',
-                     'rating', 'sample_height', 'sample_url', 'sample_width',
-                     'score', 'source', 'sources', 'status', 'tags', 'width']:
+                     'created_at', 'creator_id', 'description', 'fav_count',
+                     'file_ext', 'file_size', 'file_url', 'has_children',
+                     'has_comments','has_notes', 'height', 'id', 'md5',
+                     'parent_id', 'preview_height', 'preview_url',
+                     'preview_width', 'rating', 'sample_height', 'sample_url',
+                     'sample_width', 'score', 'source', 'sources', 'status',
+                     'tags', 'width']:
             self._data[prop] = None
         if post_id is not None:
             try:
@@ -244,6 +245,14 @@ class Post(object):
     @score.setter
     def score(self, value):
         self._data['score'] = value
+
+    @property
+    def fav_count(self):
+        """Returns the number of favorites on the post."""
+        return self._data['fav_count']
+    @fav_count.setter
+    def fav_count(self, value):
+        self._data['fav_count'] = value
 
     @property
     def rating(self):
