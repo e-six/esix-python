@@ -28,8 +28,8 @@ class Post(object):
         :raises: errors.ForumPostNotFoundError
         """
         self._data = {}
-        for prop in ['id',  'creator',  'creator_id',
-                     'parent_id',  'title',    'body']:
+        for prop in ['body', 'creator', 'creator_id', 'id',
+                     'parent_id', 'title']:
             self._data[prop] = None
         if post_id is not None:
             url = config.BASE_URL + 'forum/show.json?id=' + str(post_id)

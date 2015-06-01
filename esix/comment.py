@@ -44,8 +44,8 @@ class Comment(object):
         :raises: errors.CommentNotFoundError
         """
         self._data = {}
-        for prop in ['creator', 'post_id', 'created_at', 'id',
-                     'body', 'score', 'creator_id']:
+        for prop in ['body', 'created_at', 'creator',
+                     'creator_id', 'id', 'post_id', 'score']:
             self._data[prop] = None
         if comment_id is not None:
             try:

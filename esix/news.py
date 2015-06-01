@@ -38,7 +38,7 @@ class News(object):
         :raises: errors.NewsNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'user_id', 'created_at', 'updated_at', 'post']:
+        for prop in ['created_at', 'id', 'post', 'updated_at', 'user_id']:
             self._data[prop] = None
         if news_data is not None:
             for prop in news_data: self._data[prop] = news_data[prop]

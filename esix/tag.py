@@ -40,7 +40,7 @@ class Tag(object):
         :raises: errors.TagNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'name', 'ambiguous', 'type', 'count']:
+        for prop in ['ambiguous', 'count', 'id', 'name', 'type']:
             self._data[prop] = None
         if tag_id is not None:
             try: int(tag_id)

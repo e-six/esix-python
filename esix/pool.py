@@ -53,9 +53,9 @@ class Pool(object):
         :raises: errors.PoolNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'name', 'user_id', 'created_at',
-                     'updated_at', 'post_count', 'is_public',
-                     'is_active', 'description']:
+        for prop in ['created_at', 'description', 'id',
+                     'is_active', 'is_public', 'name', 'post_count',
+                     'updated_at', 'user_id']:
             self._data[prop] = None
         if pool_id is not None:
             url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)

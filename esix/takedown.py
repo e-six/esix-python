@@ -17,10 +17,10 @@ class Takedown(object):
         :raises: errors.TakedownNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'source', 'posts', 'status', 'email',
-                     'created_at', 'updated_at', 'reason',
-                     'notes', 'approver', 'vericode',
-                     'ip_addr', 'hidereason', 'delposts']:
+        for prop in ['approver', 'created_at', 'delposts',
+                     'email', 'hidereason', 'id', 'ip_addr',
+                     'notes', 'posts', 'reason', 'source',
+                     'status', 'updated_at', 'vericode']:
             self._data[prop] = None
         if takedown_id is not None:
             try:

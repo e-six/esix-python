@@ -138,14 +138,13 @@ class Post(object):
         :raises: errors.PostNotFoundError
         """
         self._data = {}
-        for prop in ['sources', 'file_ext', 'sample_width',
-                     'sample_height', 'children', 'preview_url',
-                     'status', 'parent_id', 'md5', 'source', 'id',
-                     'score', 'preview_height', 'file_url', 'author',
-                     'description', 'has_notes', 'has_children',
-                     'sample_url', 'tags', 'has_comments', 'file_size',
-                     'created_at', 'change', 'height', 'width',
-                     'preview_width', 'creator_id', 'rating', 'artist']:
+        for prop in ['artist', 'author', 'change', 'children',
+                     'created_at', 'creator_id', 'description', 'file_ext',
+                     'file_size', 'file_url', 'has_children', 'has_comments',
+                     'has_notes', 'height', 'id', 'md5', 'parent_id',
+                     'preview_height', 'preview_url', 'preview_width',
+                     'rating', 'sample_height', 'sample_url', 'sample_width',
+                     'score', 'source', 'sources', 'status', 'tags', 'width']:
             self._data[prop] = None
         if post_id is not None:
             try:

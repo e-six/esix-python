@@ -63,7 +63,7 @@ class User(object):
         :raises: errors.UserNotFoundError
         """
         self._data = {}
-        for prop in ['id', 'name', 'level', 'created_at', 'subscriptions']:
+        for prop in ['created_at', 'id', 'level', 'name', 'subscriptions']:
             self._data[prop] = None
         if user_id is not None:
             try: int(user_id)
