@@ -25,7 +25,7 @@ class Takedown(object):
         if takedown_id is not None:
             try:
                 data = api._fetch_data(
-                    config.BASE_URL + '/takedown/show.json?id=' + \
+                    config.BASE_URL + 'takedown/show.json?id=' + \
                     str(takedown_id)
                 )
                 for prop in data: self._data[prop] = data[prop]
