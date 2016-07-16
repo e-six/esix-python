@@ -48,7 +48,7 @@ class Ticket(object):
         if ticket_id is not None:
             try:
                 data = api._fetch_data(
-                    config.BASE_URL + '/ticket/show.json?id=' + str(ticket_id))
+                    config.BASE_URL + 'ticket/show.json?id=' + str(ticket_id))
             except (errors.APIGetError, errors.JSONError):
                 raise errors.TicketNotFoundError('The requested ticket ' +\
                     'could not be found.')

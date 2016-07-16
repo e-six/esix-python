@@ -76,11 +76,11 @@ def _get_data_obj(page):
     return data
 
 def _fetch_data(url):
-	"""Fetches a URL's page content, then converts it into a JSON object.
+    """Fetches a URL's page content, then converts it into a JSON object.
 
-	:param url: The URL of the JSON-encoded page.
-	:type url: str
-	:returns: The decoded JSON object.
-	:rtype: dict
-	"""
-	return _get_data_obj(_get_page(url))
+    :param url: The URL of the JSON-encoded page.
+    :type url: str
+    :returns: The decoded JSON object.
+    :rtype: dict
+    """
+    return _get_data_obj(_get_page(url))

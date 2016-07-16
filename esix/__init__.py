@@ -3,7 +3,7 @@
 High level frontend for the e621 JSON API.
 """
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __author__ = "Alex Schaeffer"
 __copyright__ = "Copyright (c)2014, " + __author__
 

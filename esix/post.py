@@ -150,7 +150,7 @@ class Post(object):
         if post_id is not None:
             try:
                 data = api._fetch_data(
-                    config.BASE_URL + '/post/show.json?id=' + str(post_id))
+                    config.BASE_URL + 'post/show.json?id=' + str(post_id))
                 for prop in data: self._data[prop] = data[prop]
             except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
