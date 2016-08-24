@@ -9,8 +9,8 @@ import shutil
 
 
 __NAME__ = 'e621 Downloader'
-__VERSION__ = '0.9'
-__UPDATED__ = '2014-10-01'
+__VERSION__ = '0.91'
+__UPDATED__ = '2014-07-21'
 
 FILE_MD5_DATA = '.md5data'
 FILE_DOWNLOAD_LOG = 'download-log.txt'
@@ -152,7 +152,7 @@ def gen_md5_list(folder):
     if not os.path.exists(folder):
         print('Directory Not Found. Creating Folder...')
         os.makedirs(folder)
-    data_file = open(folder+FILE_MD5_DATA,'w')
+    data_file = open(folder+FILE_MD5_DATA,'wb')
     for f in os.listdir(folder):
         if os.path.isfile(folder+f) and f.endswith(valid_exts):
             try:
@@ -160,7 +160,7 @@ def gen_md5_list(folder):
                     md5 = hashlib.md5(file.read()).hexdigest()
                 files[md5] = f
             except: continue
-    data_file.write(json.dumps(files,indent=4,sort_keys=True))
+    data_file.write(bytes(json.dumps(files,indent=4,sort_keys=True),'UTF-8'))
     data_file.close()
     return files
 
@@ -274,8 +274,9 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
                     log_msg(dest,'\tWrote/Updated metadata: '+post.md5)
                     dl_success = True
     if downloaded > 0:
-        with open(dest+FILE_MD5_DATA,'w') as data_file:
-            data_file.write(json.dumps(new_md5_list,indent=4,sort_keys=True))
+        with open(dest+FILE_MD5_DATA,'wb') as data_file:
+            data_file.write(bytes(json.dumps(new_md5_list,indent=4,
+                                             sort_keys=True),'UTF-8'))
 
     log_msg(dest,'Done.',True)
     if check_extra and not new_only:
