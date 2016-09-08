@@ -37,6 +37,10 @@ def _get_page(url):
     """
     try: req = requests.get(url, headers={'User-Agent':config.USER_AGENT})
     except Exception as e: raise errors.APIGetError(str(e))
+    if str(req.status_code).startswith('5'):
+        raise requests.exceptions.HTTPError('Error loading requested data. ' +\
+            'The server may be down or otherwise not responding. HTTP ' +\
+            'Response code ' + str(req.status_code) + ': ' + req.reason)
     return req
 
 @RateLimited(2)
