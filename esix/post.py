@@ -18,7 +18,7 @@ def recent(limit=75):
     :returns: A generator of the most recent posts.
     :rtype: generator object
     """
-    url = config.BASE_URL + 'post/index.json?limit=' + str(limit)
+    url = config.BASE_URL + 'posts.json?limit=' + str(limit)
     for post_data in api._fetch_data(url):
         yield Post(post_data=post_data)
 
@@ -35,7 +35,7 @@ def search(query, limit=75):
     try: limit = int(limit)
     except: limit = 75
     if not limit >= 0: limit = 75
-    url = config.BASE_URL + 'post/index.json?tags=' + str(query) +\
+    url = config.BASE_URL + 'posts.json?tags=' + str(query) +\
         '&limit=' + (str(limit) if limit > 0 else '100')
     result = 0
     page = 1
@@ -43,7 +43,7 @@ def search(query, limit=75):
     while not end:
         rs = api._fetch_data(url + '&page=' + str(page))
         result += len(rs)
-        for post_data in rs:
+        for post_data in rs['posts']:
             yield Post(post_data=post_data)
         if rs is None or len(rs) == 0 or (limit and result >= limit):
             end = True
@@ -138,7 +138,7 @@ class Post(object):
         :raises: errors.PostNotFoundError
         """
         self._data = {}
-        for prop in ['sources', 'file_ext', 'sample_width',
+        for prop in ['sources', 'ext', 'sample_width',
                      'sample_height', 'children', 'preview_url',
                      'status', 'parent_id', 'md5', 'source', 'id',
                      'score', 'preview_height', 'file_url', 'author',
@@ -150,7 +150,7 @@ class Post(object):
         if post_id is not None:
             try:
                 data = api._fetch_data(
-                    config.BASE_URL + 'post/show.json?id=' + str(post_id))
+                    config.BASE_URL + 'posts/' + str(post_id) + '.json')
                 for prop in data: self._data[prop] = data[prop]
             except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
@@ -289,26 +289,26 @@ class Post(object):
     @property
     def md5(self):
         """Returns the post's md5 checksum."""
-        return self._data['md5']
+        return self._data['file']['md5']
     @md5.setter
     def md5(self, value):
-        self._data['md5'] = value
+        self._data['file']['md5'] = value
 
     @property
     def file_url(self):
         """Returns the URL of the image file."""
-        return self._data['file_url']
+        return self._data['file']['url']
     @file_url.setter
     def file_url(self, value):
-        self._data['file_url'] = value
+        self._data['file']['url'] = value
 
     @property
-    def file_ext(self):
+    def ext(self):
         """Returns the file's extension: jpb, png, gif, swf."""
-        return self._data['file_ext']
-    @file_ext.setter
-    def file_ext(self, value):
-        self._data['file_ext'] = value
+        return self._data['file']['ext']
+    @ext.setter
+    def ext(self, value):
+        self._data['file']['ext'] = value
 
     @property
     def file_size(self):
@@ -500,14 +500,14 @@ class Post(object):
             return True
         except: return False
 
-    def download(self, dest='./', name_format="{md5}.{file_ext}", 
+    def download(self, dest='./', name_format="{md5}.{ext}",
         overwrite=False, write_metadata=False):
         """Downloads the post object as an image.
 
         :param dest: The directory to download to. Default is script directory.
         :type dest: str
         :param name_format: The format of the filename, post data keywords
-            should be surrounded by {}. Default {md5}.{file_ext}
+            should be surrounded by {}. Default {md5}.{ext}
         :type name_format: str
         :param overwrite: If True, will overwrite existing files with the
             same name. Default False.
@@ -521,8 +521,8 @@ class Post(object):
         if self.file_url is None:
             raise errors.BadPostError('No file URL found.')
         filename = name_format % self._data
-        if not filename.endswith("." + self.file_ext):
-            filename += "." + self.file_ext
+        if not filename.endswith("." + self.ext):
+            filename += "." + self.ext
         file = api._get_page(self.file_url)
         if file and (not os.path.isfile(dest + filename) or overwrite):
             if file.headers['Content-Type'].lower() == 'text/html':

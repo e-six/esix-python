@@ -217,7 +217,7 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
         total_imgs = 0
     for post in search_result:
         log_msg(dest,'Post '+str(post.id))
-        file_name = post.md5 + '.' + post.file_ext
+        file_name = post.md5 + '.' + post.ext
         if do_enum:
             save_name = str(
                 total_imgs-search_result.index(post)
@@ -263,7 +263,7 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
             while not dl_success:
                 try:
                     post.download_metadata(dest + '.metadata/',
-                                           comments=True, pretty=True)
+                                           comments=False, pretty=True)
                 except esix.errors.SiteLoadError as err:
                     log_msg(dest,'\tError writing metadata: '+str(err),True)
                     print("\tPlease wait a bit and press [Enter] to try again.")
