@@ -15,12 +15,12 @@ def RateLimited(max_per_second):
     def decorate(func):
         last_called = [0.0]
         def limited_func(*args,**kargs):
-            elapsed = time.clock()-last_called[0]
+            elapsed = time.time()-last_called[0]
             remaining = min_interval-elapsed
             if remaining > 0:
                 time.sleep(remaining)
             ret = func(*args,**kargs)
-            last_called[0] = time.clock()
+            last_called[0] = time.time()
             return ret
         return limited_func
     return decorate
