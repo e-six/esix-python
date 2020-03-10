@@ -21,6 +21,7 @@ class ArgumentParser(argparse.ArgumentParser):
     def error(self, message):
         raise ArgumentParserError(message)
 
+
 def get_args():
     parser = ArgumentParser(fromfile_prefix_chars='@',
                             epilog="Multiple queries can be run in a single "+\
@@ -146,7 +147,7 @@ def verify(query, dest):
     return True
 
 def gen_md5_list(folder):
-    valid_exts = ('.png','.gif','.jpg','.swf')
+    valid_exts = ('.png','.gif','.jpg','.swf','.webm')
     files = {}
     print('Generating folder images md5 list')
     if not os.path.exists(folder):
