@@ -3,7 +3,7 @@
 Comment class for the e621 API.
 """
 
-from . import api, config, errors
+from . import api, config, errors, post
 
 
 def login(username, password):
@@ -113,6 +113,13 @@ class User(object):
     def created_at(self, value):
         self._data['created_at'] = value
 
+    @property
+    def favorites(self):
+        url = config.BASE_URL + 'favorites.json?' +\
+              'user_id=' + str(self.id)
+        for res_post in api._fetch_data(url)['posts']:
+            yield post.Post(post_data=res_post)
+    
     @property
     def blacklisted(self):
         """Returned a list of tag groups the user has blacklisted.

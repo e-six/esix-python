@@ -202,6 +202,9 @@ def run(query,dest,do_verify=True,do_enum=False,write_metadata=False,
     if len(check) == 2 and check[0].lower() == 'pool':
         search_result = esix.pool.Pool(check[1]).posts
         is_pool = True
+    #if len(check) == 2 and check[0].lower() == 'fav':
+    #    user = esix.user.User(user_data={'id': check[1]})
+    #    search_result = user.favorites
     else:
         search_result = esix.post.search(query,0)
         is_pool = False

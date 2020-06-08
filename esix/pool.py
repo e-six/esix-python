@@ -58,9 +58,9 @@ class Pool(object):
                      'is_active', 'description']:
             self._data[prop] = None
         if pool_id is not None:
-            url = config.BASE_URL + 'pool/show.json?id=' + str(pool_id)
+            url = config.BASE_URL + 'pools/' + str(pool_id) + '.json'
             try:
-                data = api._fetch_data(url + '&page=999')
+                data = api._fetch_data(url)
                 for prop in data: self._data[prop] = data[prop]
             except (errors.APIGetError, errors.JSONError):
                 raise errors.PoolNotFoundError('The requested pool could ' +\
@@ -77,7 +77,6 @@ class Pool(object):
     def id(self, value):
         self._data['id'] = value
     
-
     @property
     def name(self):
         """Returns the pool's name."""
@@ -90,6 +89,14 @@ class Pool(object):
     def name_normal(self):
         """Returns a user-friendly formatted version of the pool's name."""
         return self.name.replace('_',' ').title()
+
+    @property
+    def post_ids(self):
+        """Returns a list of post IDs in the pool."""
+        return self._data['post_ids']
+    @post_ids.setter
+    def post_ids(self, value):
+        self._data['post_ids'] = value
 
     @property
     def user_id(self):
@@ -155,20 +162,8 @@ class Pool(object):
     @property
     def posts(self):
         """Returns a generator of Post objects for the pool."""
-        url = config.BASE_URL + 'pool/show.json?id=' + str(self.id)
-        page = 1
-        end = False
-        while not end:
-            try: rs = api._fetch_data(url + '&page=' + str(page))
-            except (errors.APIGetError, errors.JSONError):
-                yield None
-                return
-            for post_data in rs['posts']:
-                yield post.Post(post_data=post_data)
-            if rs is None or len(rs['posts']) == 0:
-                end = True
-                break
-            page += 1
+        for post_id in self.post_ids:
+            yield post.Post(post_id)
 
     def dump_data(self):
         """Returns a dict of all data stored locally for this object.

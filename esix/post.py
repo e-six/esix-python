@@ -161,10 +161,10 @@ class Post(object):
     @property
     def id(self):
         """Returns the ID number of the post."""
-        return self._data['id']
+        return self._data['post']['id']
     @id.setter
     def id(self, value):
-        self._data['id'] = value
+        self._data['post']['id'] = value
 
     @property
     def author(self):
