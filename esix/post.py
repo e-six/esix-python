@@ -43,11 +43,11 @@ def search(query, limit=75):
     while not end:
         rs = api._fetch_data(url + '&page=' + str(page))
         result += len(rs)
-        for post_data in rs['posts']:
-            yield Post(post_data=post_data)
-        if rs is None or len(rs) == 0 or (limit and result >= limit):
+        if rs is None or len(rs) == 0 or 'posts' not in rs or (limit and result >= limit):
             end = True
             break
+        for post_data in rs['posts']:
+            yield Post(post_data=post_data)
         page += 1
 
 def popular_by_day(year=None, month=None, day=None):
@@ -161,10 +161,15 @@ class Post(object):
     @property
     def id(self):
         """Returns the ID number of the post."""
-        return self._data['post']['id']
+        if 'post' in self._data:
+            return self._data['post']['id']
+        return self._data['id']
     @id.setter
     def id(self, value):
-        self._data['post']['id'] = value
+        if 'post' in self._data:
+            self._data['post']['id'] = value
+        else:
+            self._data['id'] = value
 
     @property
     def author(self):
