@@ -151,6 +151,7 @@ class Post(object):
             try:
                 data = api._fetch_data(
                     config.BASE_URL + 'posts/' + str(post_id) + '.json')
+                if 'post' in data: data = data['post']
                 for prop in data: self._data[prop] = data[prop]
             except (errors.APIGetError, errors.JSONError):
                 raise errors.PostNotFoundError('The requested post could ' +\
@@ -161,15 +162,10 @@ class Post(object):
     @property
     def id(self):
         """Returns the ID number of the post."""
-        if 'post' in self._data:
-            return self._data['post']['id']
         return self._data['id']
     @id.setter
     def id(self, value):
-        if 'post' in self._data:
-            self._data['post']['id'] = value
-        else:
-            self._data['id'] = value
+        self._data['id'] = value
 
     @property
     def author(self):
